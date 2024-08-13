@@ -1,0 +1,5 @@
+docs
+pages/*.html
+static/csv
+*.pyc
+*.swp

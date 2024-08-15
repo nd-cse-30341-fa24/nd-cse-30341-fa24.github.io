@@ -1,0 +1,546 @@
+title:      "Reading 01: Hardware, Operating Systems"
+icon:       fa-book
+navigation:
+  - name: "Home"
+    link: "index.html"
+    icon: "fa-desktop"
+internal:
+external:
+body:       |
+
+    **Everyone**:
+
+    Welcome to [CSE 30341 Operating System Principles], which (as the syllabus
+    states) is a course that "introduces all aspects of modern operating
+    systems", including topics such as "process structure and synchronization,
+    interprocess communication, memory management, file systems, security, I/O,
+    and distributed systems".  What this means is that we will be exploring the
+    key ideas behind operating systems such as Linux, Windows, and macOS and
+    studying the underlying abstractions these systems provide to user
+    applications.
+
+    <div class="alert alert-info" markdown="1">
+
+    #### <i class="fa fa-bookmark"></i> TL;DR
+
+    For this week, you need to setup your [GitHub] repository, read about basic
+    hardware and operating system concepts, and submit your responses to the
+    [Reading 01 Quiz].
+
+    </div>
+
+    <img src="static/img/house.png" class="pull-right" style="margin-left: 10px;">
+
+    ## Course Overview
+
+    Last year, most of you took the [CSE 20289 Systems Programming] course
+    where you learned about how to use a Unix system and how to program
+    applications in that environment.  Throughout the course, you experienced
+    and practiced the [Unix Philosophy]:
+
+    1. Write programs that do one thing and do it well.
+
+    2. Write programs to work together.
+
+    3. Write programs to handle text streams, because that is a universal interface.
+
+    You did this by writing [shell scripts], [Python] applications, and
+    utilities in [C].  You even wrote programs that utilized [system calls]
+    such as [open], [fork], and [socket]!
+
+    In this class, we will take the next step and explore what data structures,
+    algorithms, and mechanisms are necessary at the operating system level to
+    support such applications.  That is, we will discuss how the [operating
+    system kernel] provides different **abstractions** that allow us to safely
+    and efficiently execute multiple programs that communicate with each other
+    while accessing different hardware resources.  In short, we will uncover
+    the **magic** that powers the [Unix Philosophy].
+
+    For this course, we will focus on three main ideas:
+
+    1. **Virtualization**: How does the operating system represent the
+    underlying hardware resources?
+
+    2. **Concurrency**: How does the operating system coordinate multiple
+    streams of execution?
+
+    3. **Persistence**: How does the operating system organize data?
+
+    To explore these topics and apply the concepts learned in class, you will
+    implement **four programming projects** throughout the semester: implement a
+    [scheduling] process queue, implement a [message bus], implement [malloc],
+    and implement a [filesystem].  These projects will require some design work, extensive
+    testing, and utilization of the skills you learned in both [CSE 20289
+    Systems Programming] and **CSE 20312 Data Structures**.
+
+    Additionally, you will have weekly **reading assignments** (the first one
+    is below).  These will automatically be graded by the [continuous
+    integration] system provided by [GitHub].
+
+    Of course, there will be **four exams** to assess your mastery of the
+    course material.  Each exam will be on paper and will be "closed book",
+    "closed notes", "closed computer", but "open mind".
+
+    [CSE 20289 Systems Programming]: https://www3.nd.edu/~pbui/teaching/cse.20289.sp24/
+    [Unix Philosophy]: https://en.wikipedia.org/wiki/Unix_philosophy
+    [shell scripts]: https://en.wikipedia.org/wiki/Shell_script
+    [Python]: https://www.python.org/
+    [C]: https://en.wikipedia.org/wiki/C_(programming_language)
+    [operating system kernel]: https://en.wikipedia.org/wiki/Kernel_(operating_system)
+    [message bus]: https://en.wikipedia.org/wiki/Message_queue
+    [malloc]: http://man7.org/linux/man-pages/man3/malloc.3.html
+    [filesystem]: https://en.wikipedia.org/wiki/File_system
+    [continuous integration]: https://en.wikipedia.org/wiki/Continuous_integration
+    [shell]: https://en.wikipedia.org/wiki/Unix_shell
+    [scheduling]: https://en.wikipedia.org/wiki/Scheduling_(computing)#SCHEDULER
+    [system calls]: https://en.wikipedia.org/wiki/System_call
+    [open]: https://man7.org/linux/man-pages/man2/open.2.html
+    [fork]: https://man7.org/linux/man-pages/man2/fork.2.html
+    [socket]: https://man7.org/linux/man-pages/man2/socket.2.html
+
+    ## Task 0: Python
+
+    Throughout the semester, we will be using [Python 3] for a variety of
+    purposes. Because the student machines an older version of [Python 3] by default,
+    you will need to add the following line to your `~/.bashrc` file:
+
+        :::bash
+        export PATH=/escnfs/home/pbui/pub/pkgsrc/bin:$PATH
+
+    You can then source this file to load that environment variable:
+
+        :::bash
+        $ source ~/.bashrc
+
+    To check that [Python 3] works, you can run the following:
+
+        $ python3 -V
+        Python 3.12.4
+
+    This will be necessary for the `.scripts/check.py` script in your
+    **assignments** repository.
+
+    [Python 3]: https://python.org/
+
+    ## Task 1: Slack
+
+    For communication outside of our meeting time, we will be using [Slack],
+    specifically the `#cse-30341-fa24` channel:
+
+    > [https://nd-cse.slack.com/messages/cse-30341-fa24/](https://nd-cse.slack.com/messages/cse-30341-fa24/)
+
+    There is a [class mailing list], but most day-to-day communication
+    (including office hours and homework help) should take place on [Slack].
+
+    [class mailing list]: mailto:fa24-cse-30341-01-group@nd.edu
+
+    <div class="alert alert-warning" markdown="1">
+    <p>Be aware of the following:</p><br>
+
+    - You will need to signup and create a [Slack] account if you don't already
+      have one.
+
+    - You can use the web interface or download the [Slack] desktop client
+      (there are also mobile applications as well).
+
+    </div>
+
+    ## Task 2: GitHub
+
+    All of your work will be submitted to [GitHub] using [git]. Your third task
+    is to setup your [GitHub] repository by doing the following:
+
+    1. **Sign-in** or **create** a [GitHub] account if you do not already have one.
+
+    2. **Fork** the class assignments repository from the following template:
+
+        > [https://classroom.github.com/a/_Kx6KgtC](https://classroom.github.com/a/_Kx6KgtC)
+
+        This will create a **private** `assignments-$USERNAME` repository under
+        your own account and linked to the [nd-cse-30341-fa24] organization.
+
+    3. Once this is done, you can [clone] your [git] repository to your local
+    machine (or the **student** machines):
+
+            :::bash
+            $ git clone git@github.com:nd-cse-30341-fa24/assignments-$USERNAME.git
+
+        <div class="alert alert-danger" markdown="1">
+        **Note**, that [GitHub] has shutdown [password authentication].
+        </div>
+
+        To remotely access your repository from the command-line, you have two options:
+
+        1. [Setup SSH Keys]: With this method, you generate a local public and
+          private key pair on your computer and then upload the **public key**
+          to [GitHub].  When accessing [GitHub] from the command-line, you will
+          use the **private key** to authenticate to the server.
+
+            This is the **recommended** way to setup your repository as it will
+            allow for **passwordless** access.
+
+        2. [Setup a Personal Access Token]: With this method, [GitHub] will
+          generate an application specific passsword that you can use with
+          **HTTPS**.  As the **PAT** is a long string of characters, it is
+          recommended that you use it in conjunction with a **password
+          manager** or **keyring**.
+
+        <div class="alert alert-success" markdown="1">
+        #### <i class="fa fa-lock"></i> Setup SSH Keys
+
+        <p>Here is a quick tutorial on how to [Setup SSH Keys] on the student
+        machines (**if you have not already**):</p>
+
+        1. Generate SSH keys if you don't have them yet:
+
+                :::bash
+                # Accept the defaults, don't make a password if you want to go passwordless
+                $ ssh-keygen
+
+        2. Copy the contents of `~/.ssh/id_rsa.pub` to the SSH Keys section of
+        your [GitHub] settings page:
+
+            > [https://github.com/settings/keys](https://github.com/settings/keys)
+
+                :::bash
+                # Copy and paste the contents of this file into GitHub
+                $ cat ~/.ssh/id_rsa.pub
+
+        3. Edit/create `~/.ssh/config` to use this key with [GitHub]:
+
+                :::bash
+                # Add the following to your config (replace $NETID with your netid)
+                $ $EDITOR ~/.ssh/config
+                Host github.com
+                        User git
+                        Hostname github.com
+                        PreferredAuthentications publickey
+                        IdentityFile /escnfs/home/$NETID/.ssh/id_rsa
+
+        Once this is done, you should be able to do [git] operations without a password.
+        You will need to accept the host key the first time by typing in "yes".
+        </div>
+
+    [clone]:    https://git-scm.com/docs/git-clone
+    [git]:      https://git-scm.com/
+
+    [password authentication]: https://github.blog/changelog/2021-08-12-git-password-authentication-is-shutting-down/
+    [Setup a Personal Access Token]: https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
+    [Setup SSH Keys]: https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/about-ssh
+
+    <div class="alert alert-danger" markdown="1">
+    #### <i class="fa fa-github"></i> GitHub Repository
+
+    You are responsible for ensuring that your [GitHub] assignments repository
+    is in proper order, which means you have the correct settings and
+    permissions set.  Failure to properly configure your repository will
+    adversely impact your grade.
+
+    </div>
+
+    ## Task 3: Reading
+
+    The readings for **Tuesday, August 27** are:
+
+    1. [Operating Systems: Three Easy Pieces]
+
+        1. [A Dialogue on the Book](http://pages.cs.wisc.edu/~remzi/OSTEP/dialogue-threeeasy.pdf)
+        2. <p>[Introduction to Operating Systems](http://pages.cs.wisc.edu/~remzi/OSTEP/intro.pdf)</p>
+
+    2. [An introduction to the Linux boot and startup processes](https://opensource.com/article/17/2/linux-boot-and-startup)
+
+        **Optional**: [6 Stages of Linux Boot Process (Startup
+          Sequence)](http://www.thegeekstuff.com/2011/02/linux-boot-process/)
+          and [A Basic Guide to Linux Boot
+          Process](https://www.tecmint.com/linux-boot-process/).
+
+    <div class="alert alert-success" markdown="1">
+    **Note**: Don't worry if you don't get the readings done by Tuesday, as
+    this is the first week of class.
+    </div>
+
+    ## Task 4: Quiz
+
+    Once you have done the readings, answer the following [Reading 01 Quiz]
+    questions:
+
+    <div id="quiz-questions"></div>
+
+    <div id="quiz-responses"></div>
+
+    <script src="static/js/dredd-quiz.js"></script>
+    <script>
+    loadQuiz('static/json/reading01.json');
+    </script>
+
+    <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+    ### Program
+
+    In addition to a [dredd] quiz, each reading will also have a short [C]
+    program associated with each assignment.  For this week, you are to modify `program.c` in `reading01`
+    to print out `True` or `False` for each of the following statements:
+
+    1. Students cannot drop any **readings**.
+    2. There are six group projects in this course.
+    3. There are two in-class **exams** in this course.
+    4. Students are expected to **attend** class regularly and on-time.
+    5. There are no **deadlines** in this class.
+    6. Students are expected to be **respectful** of their fellow classmates and the instructional staff.
+    7. There is no **video capture** for this class.
+    8. The course **textbook** is free and available online.
+    9. Students may consult online **references** or copy from **resources** if properly cited.
+    10. Students may consult or copy from **solutions** found online or from other students.
+    11. Students may consult **ChatGPT**, **Co-Pilot**, or other AI-based tools for explaiing concepts, debugging problems, or as a reference.
+    12. Students may generate solutions with **ChatGPT**, **Co-Pilot**, or other AI-based tools to do programming assignments.
+
+    <div class="alert alert-success" markdown="1">
+    **Note**: Simply print `True` or `False` for each question (each answer on its own line with no trailing space).
+    </div>
+
+    To test your `program.c`, you should be able to use `make`:
+
+        :::bash
+        $ make test-program
+        gcc -Wall -g -std=gnu99 -o program program.c
+        curl -sLO https://www3.nd.edu/~pbui/teaching/cse.30341.fa24/static/txt/reading01/test_program.sh
+        chmod +x test_program.sh
+        ./test_program.sh
+        Checking reading01 program ...
+           Score 2.00 / 2.00
+          Status Success
+
+    ### Submission
+
+    To check your quiz answers, you will need create a `answers.json` or
+    `answers.yaml` file in the `reading01` folder of your **assignments**
+    repository:
+
+    1. For this class, you must use a **separate [git] branch for each
+    assignment**.  This means that the work for each reading and challenge must
+    be done in a separate branch.  To create and checkout a new branch, you can
+    do the following:
+
+            :::bash
+            $ git switch master           # Make sure we are in master branch
+            $ git pull --rebase           # Make sure we are up-to-date with GitHub repository
+
+            $ git checkout -b reading01   # Create reading01 branch and check it out
+
+        Once you do the above, you should see the following output for the
+        [git-branch] command:
+
+            :::bash
+            $ git branch
+              master
+            * reading01
+
+        The `*` indicates that we are currently on the `reading01` branch.
+
+        <div class="alert alert-warning" markdown="1">
+
+        **Note**: Please update the `README.md` file to include your **name**
+        and **NetID** so it is straightforward to identify your account.
+
+        </div>
+
+    2. You can either hand-write the `answers` file using your favorite text
+    editor or you can use the online form to generate the [JSON] data.
+
+        A hand-written `answers.yaml` may look like the following:
+
+            :::text
+            q1: [telemetry]
+            q2:
+              - scalability
+              - processor
+              - mouse
+              - keyboard
+
+            q3:
+              - functions
+              - call
+              - awesome
+              - lame
+
+            q4:
+              - iOS
+              - monitoring
+              - iphones
+              - NSA
+
+            q5: [init, bios, kernel, bootloader, mbr]
+
+        The equivalent `answers.json` generated using the online form may look
+        like the following:
+
+            :::json
+            {
+              "q1": "telemetry",
+              "q2": [
+                "scalability",
+                "processor",
+                "mouse",
+                "keyboard"
+              ],
+              "q3": [
+                "functions",
+                "call",
+                "awesome",
+                "lame"
+              ],
+              "q4": [
+                "iOS",
+                "monitoring",
+                "iphones",
+                "NSA"
+              ],
+              "q5": [
+                "init",
+                "bios",
+                "kernel",
+                "bootloader",
+                "mbr"
+              ]
+            }
+
+        You may use either format.  To determine which symbols correspond to
+        which response, take a look at the [Reading 01 Quiz] file.
+
+        To check your answers, you can use the provided `.scripts/check.py`
+        script:
+
+            :::bash
+            $ cd reading01                        # Go into reading01 folder
+            $ $EDITOR answers.json                # Edit your answers.json file
+
+            $ ../.scripts/check.py                # Check reading01
+            Checking reading01 quiz ...
+                  Q1 0.00
+                  Q2 0.10
+                  Q3 0.00
+                  Q4 0.00
+                  Q5 0.10
+               Score 0.20 / 2.00
+              Status Failure
+
+        This script will check your `reading01/answers.json` file to [dredd],
+        which is the automated grading system.  [dredd] will take your answers
+        and return to you a score as shown above.  Each reading quiz is worth
+        **2.0** points.
+
+        <div class="alert alert-success" markdown="1">
+        **Note**: You may check your quiz answers as many times as you want;
+        [dredd] does not keep track of who checks what or how many times.  It
+        simply returns a score.
+        </div>
+
+        To test both the quiz and the `program.c`, you can simply type in `make`:
+
+            :::bash
+            $ make
+            Checking reading01 quiz ...
+                  Q1 0.30
+                  Q2 0.40
+                  Q3 0.40
+                  Q4 0.40
+                  Q5 0.50
+               Score 2.00 / 2.00
+              Status Success
+
+            Checking reading01 program ...
+               Score 2.00 / 2.00
+              Status Success
+
+    3. Once you have your answers file and your `program.c`, you need to add
+    and commit each file, and push your commits to [GitHub]:
+
+            :::bash
+            $ git add answers.json                # Add answers.json to staging area
+            $ git commit -m "Reading 01: Quiz"    # Commit quiz
+
+            $ git add program.c                   # Add program.c to staging area
+            $ git commit -m "Reading 01: Program" # Commit program
+
+            $ git push -u origin reading01        # Push branch to GitHub
+
+        <div class="alert alert-success" markdown="1">
+        **Note**: You may edit and commit changes to your branch as many times
+        as you wish.  Just make sure all of your work goes in the appropriate
+        branch and then perform a `git push` when you are done.
+        </div>
+
+    4. When you are ready for your final submission, you need to create a
+    **pull request** via the [GitHub] interface:
+
+        - First, go to your repository's **Branches** page and then press the
+        **New pull request** button for the appropriate branch:
+
+            <div class="thumbnail">
+            <img src="static/img/reading01-github-branches.png" class="img-responsive"/>
+            </div>
+
+        - Next, edit the **pull request** title to "Reading 01", assign the
+          **pull request** to the **teaching assistant** assigned to you for
+          the given week, write a comment if necessary, and then press the
+          "Create pull request" button.
+
+            <div class="thumbnail">
+            <img src="static/img/reading01-github-new-pull-request.png" class="img-responsive"/>
+            </div>
+
+            <div class="alert alert-danger" markdown="1">
+
+            **Note**: Make sure the `base` branch is **your assignments
+              repository** and not the **class assignments repository**.
+
+            </div>
+
+        - Finally, make sure all the checks have **passed**.
+
+            <div class="thumbnail">
+            <img src="static/img/reading01-github-pull-request.png" class="img-responsive"/>
+            </div>
+
+            <div class="alert alert-danger" markdown="1">
+            **Note**: Please **do not merge** your own **pull request**.  This makes it
+            more difficult for the graders to keep track of what needs to be graded.
+            </div>
+
+        - Every commit on [GitHub] will automatically submit your quiz or code to
+          [dredd] and the results of each run is displayed in the **Checks** tab
+          of each commit as shown below:
+
+            <div class="thumbnail">
+            <img src="static/img/reading01-github-checks.png" class="img-responsive"/>
+            </div>
+
+    <div class="alert alert-info" markdown="1">
+    #### <i class="fa fa-gavel"></i> Graders
+
+    Please refer to the [Reading 01 TA List] to determine who your grader is
+    for this week.
+
+    </div>
+
+    Once you have made the **pull request**, the instructor or teaching
+    assistant can verify your work and provide feedback via the discussion form
+    inside the **pull request**.  If necessary, you can update your submission
+    by simply committing and pushing to the appropriate branch; the **pull
+    request** will automatically be updated to match your latest work.
+
+    When all work is graded, the grader will merge your branch and close the
+    **pull request**.
+
+    [CSE 30341 Operating System Principles]: index.html
+    [Operating Systems: Three Easy Pieces]: http://pages.cs.wisc.edu/~remzi/OSTEP/
+    [GitHub]: https://github.com
+    [Reading 01 Quiz]: static/json/reading01.json
+    [JSON]: http://www.json.org/
+    [git-branch]: https://git-scm.com/docs/git-branch
+    [dredd]: https://dredd.h4x0r.space
+    [create a merge request]: https://docs.gitlab.com/ee/gitlab-basics/add-merge-request.html
+    [Reading 01 TA List]: reading01_tas.html
+    [nd-cse-30341-fa24]: https://github.com/nd-cse-30341-fa24
+    [SSH Keys]: https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
+    [Slack]: https://nd-cse.slack.com

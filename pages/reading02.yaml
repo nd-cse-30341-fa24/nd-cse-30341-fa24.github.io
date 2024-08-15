@@ -231,6 +231,8 @@ body:       |
          program Makefile README.md program.c (valgrind)              ... Success
          program Makefile README.md program.c asdf                    ... Success
          program Makefile README.md program.c asdf (valgrind)         ... Success
+         program Makefile asdf README.md program.c fdsa               ... Success
+         program Makefile asdf README.md program.c fdsa (valgrind)    ... Success
          program Makefile README.md /bin/ls /bin/bash                 ... Success
          program Makefile README.md /bin/ls /bin/bash (valgrind)      ... Success
            Score 2.00 / 2.00

@@ -116,23 +116,28 @@ body:       |
     ### Hints
 
     You should not need to modify your original `sha1sum_file` function from
-    [Reading 02].  Instead, you should modify the `main` function as follows:
+    [Reading 02].  Instead, you should create an additional `sha1sum_process`
+    function and modify the `main` function as follows:
 
         :::text
+        function sha1sum_process(path: string):
+            Compute hexadecimal SHA1 Digest using sha1sum_file
+            Display hexadecimal SHA1 Digest
+
         function main(arguments):
             For each argument:
-                Create child process to:
-                    Compute hexadecimal SHA1 Digest using sha1sum_file
-                    Display hexadecimal SHA1 Digest
+                Create child process
+                Call sha1sum_process with child process
 
             For each argument:
-                Wait for each child and update the overall program status
+                Wait for each child
+                Update the overall program status
 
     <div class="alert alert-danger" markdown="1">
     #### <i class="fa fa-bomb"></i> Fork Bomb
 
-    Make sure you terminate the child process properly, otherwise you may end
-    up in a situation where you create a [fork bomb].
+    Make sure you terminate the child process in `sha1sum_process` properly,
+    otherwise you may end up in a situation where you create a [fork bomb].
 
     </div>
 

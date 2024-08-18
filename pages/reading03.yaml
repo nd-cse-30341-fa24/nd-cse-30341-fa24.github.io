@@ -117,13 +117,22 @@ body:       |
 
     You should not need to modify your original `sha1sum_file` function from
     [Reading 02].  Instead, you should create an additional `sha1sum_process`
-    function and modify the `main` function as follows:
+    function that computes the [SHA1] digest using `sha1sum_file` and then
+    displays the result:
+
+        :::c
+        void sha1sum_process(const char *path) {
+            ...
+            if (!sha1sum_file(path, cksum)) {
+                ...   // Failure
+            }
+            ...       // Success
+        }
+
+    Once you have a `sha1sum_process` funciton, you will need to modify the
+    `main` function as follows:
 
         :::text
-        function sha1sum_process(path: string):
-            Compute hexadecimal SHA1 Digest using sha1sum_file
-            Display hexadecimal SHA1 Digest
-
         function main(arguments):
             For each argument:
                 Create child process

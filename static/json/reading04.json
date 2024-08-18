@@ -1,0 +1,65 @@
+{
+    "q1": {
+        "type": "blank",
+        "question": "\n<strong>\n\nTo take advantage of modern CPUs with multiple cores, application\ndevelopers must ____ their ____ programs into separate streams of execution\ncalled ____.  Each of these streams of execution co-exist within the same\n____, which means they share the same address space and thus can access the\nsame data.  One common use of threads is to ____ I/O with other activities\nwithin a program.\n\n</strong>\n"
+    },
+    "q2": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nWhich of the following are true statements about threads (choose all that apply)?\n\n</strong>\n",
+        "responses": {
+            "registers": "Threads share the same set of registers and program counters.",
+            "tcb": "The state of each thread is stored in a thread control block.",
+            "address": "All threads within a process share the same code, data, and heap, but not stack.",
+            "onethread": "Only one thread per process is allowed to be executed at a time.",
+            "main": "Every process has at least one thread.",
+            "unlimited": "A process can have an unlimited number of threads."
+        }
+    },
+    "q3": {
+        "type": "blank",
+        "question": "\n<strong>\n\nWith processes, we use <tt>fork</tt> to create a new process, and\n<tt>wait</tt> to wait for the process to finish.  With POSIX threads, we\nuse the <tt>____</tt> function to start a thread and the <tt>____</tt>\nfunction to wait for one to finish.\n\nTo guard a critical section of code, we can use a ____ from the POSIX\nthreads library as follows:\n\n</strong>\n\n<pre>\npthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;\n____(&lock);                    // 3\nx = x + 1;                      // Critical section\n____(&lock);                    // 4\n</pre>\n\n<strong>\n\nIf we need some sort of signaling between threads, we can use a ____ in the\nfollowing format:\n\n</strong>\n\n<pre>\npthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;\npthread_cond_t  cond = PTHREAD_COND_INITIALIZER;\npthread_mutex_lock(&lock);\nwhile (ready == 0)\n    ____(&cond, &lock);         // 6\npthread_mutex_unlock(&lock);\n</pre>\n\n<strong>\n\nTo perform the actual signaling, we would put the following code in\nanother thread:\n\n</strong>\n\n<pre>\npthread_mutex_lock(&lock);\nready = 1;\n____(&cond);                    // 7\npthread_mutex_unlock(&lock);\n</pre>\n"
+    },
+    "q4": {
+        "type": "order",
+        "question": "\n<strong>\n\nMatch the following terms with the following definitions (pick the terms in\norder):\n\n</strong>\n\n<ol>\n\n  <li>Arises if multiple threads attempt to update a shared resource,\n  leading to a surprising (and perhaps undesirable) outcome.</li>\n\n  <li>A piece of code that accesses a shared resource (usually a variable or\n  data structure).</li>\n\n  <li>A primitive that guarantees only a single thread has access to a\n  resource.</li>\n\n</ol>\n",
+        "responses": {
+            "critical": "Critical Section",
+            "mutex": "Mutual Exclusion",
+            "racecondition": "Race Condition"
+        }
+    },
+    "q5": {
+        "type": "blank",
+        "question": "\n<strong>\n\nWhen using threads, we can protect a critical section by employing a ____\nvariable.  This object is either ____, which means no thread holds the\nobject, or ____, which means exactly one thread (aka the ____) holds the\nobject and is in the critical section.\n\n</strong>\n"
+    },
+    "q6": {
+        "type": "blank",
+        "question": "<strong>\nTo evaluate different locking mechanisms, we need to consider three basic criteria:\n\n<ol>\n\n<li>____: Whether or not the lock actually prevents multiple threads from\nentering a critical section.</li>\n\n<li>____: Whether or not each thread contending for the lock gets a fair\nshot at acquiring it.</li>\n\n<li>____: How much overhead is added by using the locking mechanism.</li>\n\n</ol>\n\n</strong>\n"
+    },
+    "q7": {
+        "type": "multiple",
+        "question": "<strong>\n\nTo implement locks, we need support from the hardware.  Which of the\nfollowing statements about different locking mechanisms are true (select\nall that apply)?\n\n</strong>\n",
+        "responses": {
+            "interrupts": "Although simple, disabling interrupts has numerous problems as a locking mechanism.",
+            "testandset": "Test-and-Set provides a machine instruction that allows us to test the old value at a memory location and while simultaneously setting the memory location to a new value.",
+            "compareandswap": "Compare-and-Swap provides a machine instruction that allows us to test a value, update it if it is the expected value, and return the actual value at that memory location.",
+            "loadlink": "Load-Linked and Store-Conditional instructions work together to atomically fetch a value and update it.",
+            "fetchandadd": "Fetch-And-Add can be used to implement a ticket lock, which guarantees progress for all threads."
+        }
+    },
+    "q8": {
+        "type": "multiple",
+        "question": "<strong>\n\nRegarding spin locks, which of the following statements are true (select\nall that apply)?\n</strong>\n",
+        "responses": {
+            "waiting": "Spin-waiting is inefficient because a thread wastes CPU resources simply waiting for another thread to release a lock",
+            "fairness": "Spin locks are both correct and guarantee fairness.",
+            "yielding": "Yielding allows a thread to deschedule itself when it discovers the lock it wants is being held.",
+            "parking": "Parking involves putting a thread to sleep temporarily and into a queue that will be used to select the next thread to wake up.",
+            "futex": "A futex is a mutex implemented on the filesystem."
+        }
+    },
+    "q9": {
+        "type": "blank",
+        "question": "\n<strong>\n\nIn ____ concurrency, we simply wait for something to occur; when it does,\nwe do some small amount of work based on the type of event.  This\nprocessing usually happens in a simple construct known as an ____.\n\nOn a Unix system we can use either the ____ or ____ system calls to perform\nnon-blocking or ____ I/O.  The advantage of the event-based approach is\nthat we don't need to deal with any ____ normally found in threaded\nprograms.\n\n</strong>\n"
+    }
+}

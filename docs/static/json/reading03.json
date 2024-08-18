@@ -1,0 +1,65 @@
+{
+    "q1": {
+        "type": "blank",
+        "question": "\n<strong>\n\nIn order to create a ____ policy or ____, we first need to consider our\ntypical ____ or collection of processes running in the system.\nAdditionally, we will need to determine a ____ or means of measuring the\neffectiveness of our decision-making process.  For instance, ____ is the\ntime at which the job completes minus the time at which it arrived in the\nsystem.  This is in contrast to ____ which is the time from when a job\narrives in a system to the first time it is scheduled.\n\n</strong>\n"
+    },
+    "q2": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nAssuming we relax assumption 1, which of the following is true about FIFO\nscheduling (choose all that apply)?\n\n</strong>\n",
+        "responses": {
+            "preemption": "It requires the ability to preempt jobs.",
+            "turnaround": "It produces optimal average turnaround times.",
+            "convoy": "It can suffer from the convoy effect."
+        }
+    },
+    "q3": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nAssuming we relax assumptions 1 and 2, which of the following is true about\nSJF scheduling (choose all that apply)?\n\n</strong>\n",
+        "responses": {
+            "preemption": "It requires the ability to preempt jobs.",
+            "turnaround": "It produces optimal average turnaround times.",
+            "convoy": "It can suffer from the convoy effect."
+        }
+    },
+    "q4": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nAssuming we relax assumptions 1, 2, and 3, which of the following is true\nabout STCF scheduling (choose all that apply)?\n\n</strong>\n",
+        "responses": {
+            "preemption": "It requires the ability to preempt jobs.",
+            "turnaround": "It produces optimal average turnaround times.",
+            "convoy": "It can suffer from the convoy effect."
+        }
+    },
+    "q5": {
+        "type": "blank",
+        "question": "\n<strong>\n\nTo improve ____, the ____ scheduling policy only runs jobs for a brief\nperiod and then switches to the next job in the run queue.  This scheduling\npolicy must take care in setting the length of the ____ in order to ____\nthe cost of ____ without making it so long that the system is no longer\nresponsive.\n\n</strong>\n"
+    },
+    "q6": {
+        "type": "blank",
+        "question": "\n<strong>\n\nIn general, any policy that is ____, that is evenly divides the CPU among\nactive processes on a small time scale, will perform poorly on metrics such\nas ____ time but well on metrics such as ____ time.\n\n</strong>\n"
+    },
+    "q7": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nWhich of the following statements is true about the MLFQ scheduling policy\n(choose all that apply)?\n\n</strong>\n",
+        "responses": {
+            "queues": "MLFQ uses multiple queues with different priority levels.",
+            "apriori": "MLFQ requires a priori knowledge of the processes.",
+            "roundrobin": "MLFQ uses round-robin to schedule jobs of the same priority level.",
+            "raises": "MLFQ raises the priority of a job that has used up its entire time slice.",
+            "lowers": "MLFQ lowers the priority of a job once it uses up its allotment at a given level.",
+            "sjf": "MLFQ approximates SJF because it assumes jobs are short and starts them with the highest priority.",
+            "starvation": "MLFQ overcomes the problem of starvation by periodically performing a priority boost."
+        }
+    },
+    "q8": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nWhich of the following statements is true about the proportional-share scheduling policy\n(choose all that apply)?\n\n</strong>\n",
+        "responses": {
+            "tickets": "Tickets represent the share of a resource a process should receive.",
+            "random": "The use of randomness is advantageous since it avoids worst case scenarios, is lightweight, and fast.",
+            "transfer": "Once allocated, a process has a constant number of tickets.",
+            "guarantee": "Proportional-share scheduling guarantees meeting desired division of work.",
+            "implementation": "This policy is simple to implement with a random number generator and a linked list that tracks the processes."
+        }
+    }
+}

@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Operating System Principles</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="static/css/blugold.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<style>
+	body {
+	    padding: 10px;
+	}
+	</style>
+    </head>
+    <body>
+	<div class="container">
+
+	    <div class="row">
+		<div class="page-header">
+		    <ul class="nav nav-pills pull-right">
+			
+			<li><a href="#logistics"><i class="fa fa-cogs"></i> <span class="visible-md-inline visible-lg-inline">Logistics</span></a></li>
+			
+			<li><a href="#schedule"><i class="fa fa-calendar"></i> <span class="visible-md-inline visible-lg-inline">Schedule</span></a></li>
+			
+			<li><a href="#Requirements"><i class="fa fa-balance-scale"></i> <span class="visible-md-inline visible-lg-inline">Requirements</span></a></li>
+			
+			<li><a href="#resources"><i class="fa fa-external-link"></i> <span class="visible-md-inline visible-lg-inline">Resources</span></a></li>
+			
+		    </ul>
+		    <h1><i class="fa fa-desktop"></i> Operating System Principles</h1>
+		</div>
+	    </div>
+
+            
+<div class="row">
+<p><strong>CSE 30341</strong> is the one of the core classes in the <a href="http://cse.nd.edu">Computer Science and
+Engineering</a> program at the <a href="http://www.nd.edu">University of Notre Dame</a>.  This course
+introduces many different aspects of modern operating systems. Topics may
+include process structure and synchronization, interprocess communication,
+concurrency and parallelism with threads, virtual memory, resource
+allocation, file systems, security, and distributed systems.</p>
+</div>
+<p><img src="static/img/house.png" class="pull-right" style="margin-left: 10px;"></p>
+<div class="row">
+<p>Upon successful completion of this course, students will be able to:</p>
+<ul>
+<li>
+<p><strong>Describe</strong> the basic components of a modern operating system.</p>
+</li>
+<li>
+<p><strong>Understand</strong> the symbiotic relationship between computer architecture
+  and operating system design.</p>
+</li>
+<li>
+<p><strong>Discuss</strong>  how operating systems provide abstractions for
+  virtualization, concurrency, and persistence.</p>
+</li>
+<li>
+<p><strong>Construct</strong> applications that utilize processes, threads, interprocess
+  communication, and synchronization primitives to solve problems requiring
+  concurrent or parallel computation.</p>
+</li>
+<li>
+<p><strong>Explain</strong> how resources such as CPU time and memory are allocated and
+  managed by the operating system.</p>
+</li>
+<li>
+<p><strong>Evaluate</strong> the trade-offs embedded in different operating system
+  techniques, algorithms, and data structures.</p>
+</li>
+<li>
+<p><strong>Analyze</strong> the performance of applications in a variety of system contexts.</p>
+</li>
+</ul>
+</div>
+<div class="row">
+    <div class="page-header">
+        <h2 id="logistics"><i class="fa fa-cogs"></i> Logistics</h2>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-md-6">
+<div class="row">
+<div class="col-md-6">
+    <h3>Class Information</h3>
+    <dl>
+        <dt><i class="fa fa-clock-o"></i> Lecture</dt>
+        <dd><strong>T/TH</strong> 9:30 AM - 10:45 AM</dd>
+
+        <dt><i class="fa fa-home"></i> Location</dt>
+        <dd>140 DeBartolo Hall</dd>
+
+        <dt><i class="fa fa-video-camera"></i> Zoom Meeting</dt>
+        <dd><a href="https://notredame.zoom.us/j/98056947181">980 5694 7181</a></dd>
+
+        <dt><i class="fa fa-envelope"></i> Mailing List (Class)</dt>
+        <dd><a href="mailto:fa24-cse-30341-01-group@nd.edu">fa24-cse-30341-01-group@nd.edu</a></dd>
+
+        <dt><i class="fa fa-envelope"></i> Mailing List (Staff)</dt>
+        <dd><a href="mailto:fa24-cse-30341-01-staff-list@nd.edu">fa24-cse-30341-01-staff-list@nd.edu</a></dd>
+
+        <dt><i class="fa fa-slack"></i> Slack</dt>
+        <dd><a href="https://nd-cse.slack.com/messages/cse-30341-fa24/">#cse-30341-fa24</a></dd>
+
+        <dt><i class="fa fa-github"></i> GitHub</dt>
+        <dd><a href="https://www.github.com/nd-cse-30341-fa24/">nd-cse-30341-fa24</a></dd>
+    </dl>
+</div>
+
+<div class="col-md-6">
+    <h3>Instructor</h3>
+
+    <dl>
+        <dt><i class="fa fa-user"></i> Instructor</dt>
+        <dd><a href="http://www3.nd.edu/~pbui/">Peter Bui</a> (<a href="mailto:pbui@nd.edu">pbui@nd.edu</a>)</dd>
+
+        <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+        <dd><strong>M/T/W/TH/F</strong> 1:30 PM - 3:00 PM, and by <strong>appointment</strong></dd>
+
+        <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+        <dd>326D Cushing Hall</dd>
+    </dl>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<h3>Teaching Assistants</h3>
+
+  <div class="row">
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Walker Bagley (<a href="mailto:wbagley@nd.edu">wbagley@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Daniel Blittschau (<a href="mailto:dblittsc@nd.edu">dblittsc@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Carolina Carpenetti (<a href="mailto:ccarpene@nd.edu">ccarpene@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+      </div><div class="row">
+      
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Ellie Jensen (<a href="mailto:ejensen7@nd.edu">ejensen7@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Victoria Mendez (<a href="mailto:vmendez@nd.edu">vmendez@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Clayton O&#x27;Dell (<a href="mailto:codell2@nd.edu">codell2@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+      </div><div class="row">
+      
+    
+      <div class="col-md-4">
+        <dl>
+          <dt><i class="fa fa-user"></i> Teaching Assistant</dt>
+          <dd>Jakub Wielgus (<a href="mailto:jwielgus@nd.edu">jwielgus@nd.edu</a>)</dd>
+          <!--
+          <dt><i class="fa fa-life-ring"></i> Office Hours</dt>
+          <dd>TBD</dd>
+          <dt><i class="fa fa-briefcase"></i> Office Location</dt>
+          <dd>TBD</dd>
+          //-->
+        </dl>
+        </div>
+      
+    
+  </div>
+  <div class="row">
+    <div class="alert alert-info">
+        <h4><i class="fa fa-question"></i> Help Protocol</h4>
+        <ol class="list-inline">
+            <li><em><i class="fa fa-lightbulb-o"></i> Think</em></li>
+            <li><small><i class="fa fa-arrow-right"></i></small></li>
+            <li><strong><i class="fa fa-slack"></i> Slack</strong></li>
+            <li><small><i class="fa fa-arrow-right"></i></small></li>
+            <li><em><i class="fa fa-lightbulb-o"></i> Think</em></li>
+            <li><small><i class="fa fa-arrow-right"></i></small></li>
+            <li><strong><i class="fa fa-envelope"></i> Email</strong></li>
+            <li><small><i class="fa fa-arrow-right"></i></small></li>
+            <li><em><i class="fa fa-lightbulb-o"></i> Think</em></li>
+            <li><small><i class="fa fa-arrow-right"></i></small></li>
+            <li><strong><i class="fa fa-briefcase"></i> Office</strong></li>
+        </ol>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+<h3 id="office-hours">Office Hours<a class="headerlink" href="#office-hours" title="Permanent link">&para;</a></h3>
+<div class="thumbnail">
+    <img src="static/img/office-hours.svg">
+</div>
+<div>
+<div class="row">
+    <div class="page-header">
+        <h2 id="schedule"><i class="fa fa-calendar"></i> Schedule</h2>
+    </div>
+</div>
+<style>
+table.schedule td.unit {
+    background-color: #fff;
+    border-right: 2px solid #ddd;
+    text-align: right;
+    width: 175px;
+    vertical-align: middle;
+}
+</style>
+<div class="row">
+    <table class="table condensed table-striped schedule">
+        <thead>
+            <tr>
+                <th class="text-center">Unit</th>
+                <th class="text-center" style="width: 100px;">Date</th>
+                <th class="text-center">Topics</th>
+                <th class="text-center" style="width: 125px;">Assignments</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            
+            
+              <tr>
+              <td colspan="4" class="text-center text-strong" style="border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; padding: 4px;">Unit 01: Virtualization with Processes</td>
+              </tr>
+              
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Hardware, Operating Systems</td>
+            
+                <td class="text-center text-strong"><tt>Tue 08/27</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Syllabus, Computer Hardware, Boot Sequence
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading01.html" class="label label-primary">Reading 01</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 08/29</tt></td>
+                <td class="text-strong">
+                
+                  
+                  OS Taxonomy, History, Themes
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">System Calls, Processes</td>
+            
+                <td class="text-center text-strong"><tt>Tue 09/03</tt></td>
+                <td class="text-strong">
+                
+                  
+                  System Calls
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading02.html" class="label label-primary">Reading 02</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 09/05</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Processes
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="3" class="text-strong text-primary text-center unit">Scheduling</td>
+            
+                <td class="text-center text-strong"><tt>Tue 09/10</tt></td>
+                <td class="text-strong">
+                
+                  
+                  FIFO, Round Robin
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading03.html" class="label label-primary">Reading 03</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 09/12</tt></td>
+                <td class="text-strong">
+                
+                  
+                  MLFQ, Lottery
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Sun 09/15</tt></td>
+                <td class="text-strong">
+                
+                  <i class="text-muted">Project</i>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="project01.html" class="label label-caution">Project 01</a>
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Exam 01</td>
+            
+                <td class="text-center text-strong"><tt>Tue 09/17</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Events
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 09/19</tt></td>
+                <td class="text-strong">
+                
+                  
+                  
+                  
+                
+                
+                
+                  
+                
+                
+                  <span class="label label-danger">Exam 01</span>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+              <tr>
+              <td colspan="4" class="text-center text-strong" style="border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; padding: 4px;">Unit 02: Concurrency with Threads</td>
+              </tr>
+              
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Threads, Locks</td>
+            
+                <td class="text-center text-strong"><tt>Tue 09/24</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Threads
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading04.html" class="label label-primary">Reading 04</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 09/26</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Locks
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Condition Variables, Semaphores</td>
+            
+                <td class="text-center text-strong"><tt>Tue 10/01</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Condition Variables
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading05.html" class="label label-primary">Reading 05</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 10/03</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Semaphores
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="3" class="text-strong text-primary text-center unit">Structures, Patterns</td>
+            
+                <td class="text-center text-strong"><tt>Tue 10/08</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Structures
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading06.html" class="label label-primary">Reading 06</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 10/10</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Patterns
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Sun 10/13</tt></td>
+                <td class="text-strong">
+                
+                  <i class="text-muted">Project</i>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="project02.html" class="label label-caution">Project 02</a>
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Exam 02</td>
+            
+                <td class="text-center text-strong"><tt>Tue 10/15</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Concurrency Bugs
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 10/17</tt></td>
+                <td class="text-strong">
+                
+                  
+                  
+                  
+                
+                
+                
+                  
+                
+                
+                  <span class="label label-danger">Exam 02</span>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+              <tr>
+              <td colspan="4" class="text-center text-strong" style="border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; padding: 4px;">Fall Break</td>
+              </tr>
+              
+            
+              <tr>
+              <td colspan="4" class="text-center text-strong" style="border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; padding: 4px;">Unit 03: Virtualization with Memory</td>
+              </tr>
+              
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Virtual Memory</td>
+            
+                <td class="text-center text-strong"><tt>Tue 10/29</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Address Space, Translation
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading07.html" class="label label-primary">Reading 07</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 10/31</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Free-Space Management
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Heap Management, Segmentation</td>
+            
+                <td class="text-center text-strong"><tt>Tue 11/05</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Heap Management
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading08.html" class="label label-primary">Reading 08</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 11/07</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Segmentation
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="3" class="text-strong text-primary text-center unit">Paging</td>
+            
+                <td class="text-center text-strong"><tt>Tue 11/12</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Paging
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading09.html" class="label label-primary">Reading 09</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 11/14</tt></td>
+                <td class="text-strong">
+                
+                  
+                  TLB / Multi-Level
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Sun 11/17</tt></td>
+                <td class="text-strong">
+                
+                  <i class="text-muted">Project</i>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="project03.html" class="label label-caution">Project 03</a>
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Exam 03</td>
+            
+                <td class="text-center text-strong"><tt>Tue 11/19</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Swapping
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 11/21</tt></td>
+                <td class="text-strong">
+                
+                  
+                  
+                  
+                
+                
+                
+                  
+                
+                
+                  <span class="label label-danger">Exam 03</span>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+              <tr>
+              <td colspan="4" class="text-center text-strong" style="border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; padding: 4px;">Unit 04: Persistence with File Systems</td>
+              </tr>
+              
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Devices</td>
+            
+                <td class="text-center text-strong"><tt>Tue 11/26</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Devices
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading10.html" class="label label-primary">Reading 10</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 11/28</tt></td>
+                <td class="text-strong">
+                
+                  
+                  <i class="text-muted">Thanksgiving</i>
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">File Systems</td>
+            
+                <td class="text-center text-strong"><tt>Tue 12/03</tt></td>
+                <td class="text-strong">
+                
+                  
+                  RAID
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="reading11.html" class="label label-primary">Reading 11</a>
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 12/05</tt></td>
+                <td class="text-strong">
+                
+                  
+                  File Systems
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="2" class="text-strong text-primary text-center unit">Consistency, Integrity</td>
+            
+                <td class="text-center text-strong"><tt>Tue 12/10</tt></td>
+                <td class="text-strong">
+                
+                  
+                  FFS, LFS
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            <tr>
+            
+                <td class="text-center text-strong"><tt>Thu 12/12</tt></td>
+                <td class="text-strong">
+                
+                  
+                  Consistency, Integrity
+                  
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                  
+                  
+                    
+                  
+                  <a href="project04.html" class="label label-caution">Project 04</a>
+                
+                </td>
+            </tr>
+            
+            
+            
+
+            
+            <tr>
+            
+                <td rowspan="1" class="text-strong text-primary text-center unit">Exam 04</td>
+            
+                <td class="text-center text-strong"><tt>Thu 12/19</tt></td>
+                <td class="text-strong">
+                
+                  
+                  
+                  
+                
+                
+                
+                  
+                
+                
+                  <span class="label label-danger">Exam 04</span>
+                
+                
+                </td>
+                <td class="text-strong text-center">
+                
+                </td>
+            </tr>
+            
+            
+
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="page-header">
+        <h2 id="Requirements"><i class="fa fa-balance-scale"></i> Requirements</h2>
+    </div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<h3 id="coursework">Coursework<a class="headerlink" href="#coursework" title="Permanent link">&para;</a></h3>
+<table class="table table-condensed table-bordered table-striped">
+      <thead>
+          <tr>
+              <th class="text-center">Component</th>
+              <th class="text-center">Points</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><span class="label label-primary">Readings</span> Weekly individual reading assignments.</td>
+              <td class="text-center">10 &times; 4</td>
+          </tr>
+          <tr>
+              <td><span class="label label-caution">Projects</span> Periodic group projects.</td>
+              <td class="text-center">4 &times; 15</td>
+          </tr>
+          <tr>
+              <td><span class="label label-danger">Exams</span> Four timed exams.</td>
+              <td class="text-center">3 &times; 45, 65</td>
+          </tr>
+          <tr>
+              <td class="text-strong text-right">Total</td>
+              <td class="text-strong text-center">300</td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+<div class="col-md-6">
+<h3 id="grading">Grading<a class="headerlink" href="#grading" title="Permanent link">&para;</a></h3>
+<table class="table table-condensed table-bordered">
+      <thead>
+          <tr>
+              <th class="text-center">Grade</th>
+              <th class="text-center">Points</th>
+              <th class="text-center">Grade</th>
+              <th class="text-center">Points</th>
+              <th class="text-center">Grade</th>
+              <th class="text-center">Points</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr class="success">
+              <td></td>
+              <td></td>
+              <td class="text-center text-strong">A</td>
+              <td class="text-center">280-300</td>
+              <td class="text-center text-strong">A-</td>
+              <td class="text-center">270-279</td>
+          </tr>
+          <tr class="info">
+              <td class="text-center text-strong">B+</td>
+              <td class="text-center">260-269</td>
+              <td class="text-center text-strong">B</td>
+              <td class="text-center">250-259</td>
+              <td class="text-center text-strong">B-</td>
+              <td class="text-center">240-249</td>
+          </tr>
+          <tr class="warning">
+              <td class="text-center text-strong">C+</td>
+              <td class="text-center">230-239</td>
+              <td class="text-center text-strong">C</td>
+              <td class="text-center">220-229</td>
+              <td class="text-center text-strong">C-</td>
+              <td class="text-center">210-219</td>
+          </tr>
+          <tr class="danger">
+              <td class="text-center text-strong">D</td>
+              <td class="text-center">195-209</td>
+              <td class="text-center text-strong">F</td>
+              <td class="text-center">0-194</td>
+              <td></td>
+              <td></td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+</div>
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+    <div class="alert alert-info">
+      <h4><i class="fa fa-calendar"></i> Due Dates</h4>
+      <p>
+      All <b>Readings</b> are to be
+        submitted to your own <b>private</b> <a
+        href="https://github.com">GitHub</a> repository.  Unless
+        specified otherwise:
+      </p>
+      <p>
+      <ul>
+      <li><b>Readings</b> are due by <b>noon</b> on the <b>Tuesday</b> of each week.</li>
+      <li><b>Projects</b> are due by <b>noon</b> on the <b>Sunday</b> of the week assigned.</li>
+      </ul>
+      </p>
+      <p><b>Note</b>: As described below, there is a <b>grace period</b>
+        that allows for <b>late</b> submissions with <b>no penalty</b> up
+        to <tt>12</tt> hours after each <b>deadline</b>.</p>
+    </div>
+</div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+      <h3>Policies</h3>
+      <div class="row">
+          <div class="col-md-4">
+          <h4>Participation</h4>
+          <p>
+          Students are expected to attend and contribute regularly in class. This
+          means answering questions in class, participating in discussions, and
+          helping other students.
+          </p>
+          <p>
+          Foreseeable absences should be discussed with the instructor ahead of time.
+          </p>
+          </div>
+          <div class="col-md-4">
+          <h4>Community</h4>
+          <p>
+          Recalling one of the tenets of the <a href="https://en.wikipedia.org/wiki/Hacker_ethic">Hacker Ethic</a>:
+          </p>
+          <blockquote>
+          Hackers should be judged by their hacking, not criteria such as
+          degrees, age, race, sex, or position.
+          </blockquote>
+          <p>
+          Students are expected to be respectful of their fellow classmates
+          and the instructional staff.
+          </p>
+          </div>
+          <div class="col-md-4">
+          <h4>Students with Disabilities</h4>
+          <p>
+          Any student who has a documented disability and is registered
+          with Disability Services should speak with the professor as soon
+          as possible regarding accommodations. Students who are not
+          registered should contact the <a
+          href="https://supportandcare.nd.edu/">Office of Disabilities</a>.
+          </p>
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-4">
+          <h4>Academic Honesty</h4>
+          <p>
+          Any academic misconduct in this course is considered a serious
+          offense, and the strongest possible academic penalties will be
+          pursued for such behavior. Students may discuss high-level
+          ideas with other students, but at the time of implementation
+          (i.e. programming), each person must do his/her own work. Use
+          of the Internet as a reference is allowed but directly copying
+          code or other information is cheating. It is cheating to copy,
+          to allow another person to copy, all or part of an exam or
+          assignment, or to fake program output. It is also a violation
+          of the <a href="https://honorcode.nd.edu/">Undergraduate
+          Academic Code of Honor</a> to observe and then fail to report
+          academic dishonesty. You are responsible for the security and
+          integrity of your own work.
+          </p>
+          </div>
+          <div class="col-md-4">
+          <h4>Late Work</h4>
+          <p>
+          In the case of a serious illness or other excused absence, as defined by
+          university policies, coursework submissions will be accepted late by the
+          same number of days as the excused absence.
+          </p>
+          <p>
+          Otherwise, there is an automatic <b>25% late penalty</b> for
+          assignments turned in <b>12 hours</b> past the specified
+          deadline.
+          </p>
+          <p>No assignments will be accepted after the <b>last day of class</b>
+          without the permission of the instructor.</p>
+          </div>
+          <div class="col-md-4">
+          <h4>Classroom Recording</h4>
+          <p>
+          This course will be recorded using <b>Zoom</b> and
+          <b>Panopto</b>. This system allows us to automatically record and
+          distribute lectures to you in a secure environment. You can watch
+          these recordings on your computer, tablet, or smartphone. In the
+          course in <b>Canvas</b>, look for the "Panopto" tool on the left
+          hand side of the course.
+          </p>
+          <p>
+          Because we will be recording in the classroom, your questions and
+          comments may be recorded. Recordings typically only capture the
+          front of the classroom, but if you have any concerns about your
+          voice or image being recorded please speak to me to discuss your
+          concerns. Except for faculty and staff who require access, no
+          content will be shared with individuals outside of your course
+          without your permission.
+          </p>
+          <p>
+          These recordings are jointly copyrighted by the University of
+          Notre Dame and your instructor. Posting them to other websites
+          (including YouTube, Facebook, SnapChat, etc.) or elsewhere
+          without express, written permission may result in disciplinary
+          action and possible civil prosecution.
+          </p>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="alert alert-danger">
+        <h4><i class="fa fa-warning"></i> CSE Guide to the Honor Code</h4>
+
+        <p>For the assignments in this class, you are allowed to consult
+        printed and online resources and to discuss the class material with
+        other students.  You may also consult <b>AI Tools</b> such as
+        <b>CoPilot</b> or <b>ChatGPT</b> for help explaining concepts,
+        debugging problems, or as a reference.  Viewing or consulting
+        <b>solutions</b>, such as those from other students, previous
+        semesters, or generated by <b>AI Tools</b> is <b>never
+        allowed</b>.</p>
+
+        <p>Likewise, you may copy <b>small and trivial</b> snippets from
+        books, online sources, and <b>AI Tools</b> as long as you <b>cite
+        them properly</b>.  However, you <b>may not copy</b> solutions or
+        <b>significant</b> portions of code from other students or online
+        sources, nor may you generate solutions via <b>AI Tools</b>.  
+
+        <p>Finally, when preparing for exams in this class, <b>you may not
+        access exams from previous semesters</b>, nor may you look at or
+        copy solutions from other current or former students.</p>
+
+        <p></p>
+
+        <table class="table table-striped table-bordered" style="color: #000000; background: #ffffff; font-weight: bold">
+        <thead>
+        <th></th>
+        <th class="text-center">Resources</th>
+        <th class="text-center">Solutions</th>
+        </thead>
+        <tbody>
+        <tr>
+        <th>Consulting</th>
+        <td bgcolor="#93c47d">Allowed</td>
+        <td bgcolor="#e06666">Not Allowed</td>
+        </tr>
+        <tr>
+        <th>Copying</th>
+        <td bgcolor="ffd966">Cite</td>
+        <td bgcolor="#e06666">Not Allowed</td>
+        </tr>
+        </tbody></table>
+
+        <p>See the <a
+        href="https://cse.nd.edu/undergraduate/cse-guide-to-the-honor-code/">CSE
+        Guide to the Honor Code</a> for definitions of the above terms and
+        specific examples of what is allowed and not allowed when
+        consulting resources.</p>
+
+        <p>If you are unclear about whether certain forms of consultation
+        or common work are acceptable or what the standards for citation
+        are, you responsible for consulting your instructor.</p>
+
+        <p>If an instructor sees behavior that is, in his judgement,
+        academically dishonest, he is required to file either an <a
+        href="https://honorcode.nd.edu/honor-code-violation-report/">Honor
+        Code Violation Report</a> or a formal report to the College of
+        Engineering Honesty Committee.</p>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="page-header">
+        <h2 id="resources"><i class="fa fa-external-link"></i> Resources</h2>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-md-4">
+<h3 id="textbooks">Textbooks<a class="headerlink" href="#textbooks" title="Permanent link">&para;</a></h3>
+<div class="thumbnail">
+    <img src="static/img/ostep.jpg" width="125px">
+    <div class="caption">
+        <h4>Operating Systems: Three Easy Pieces </h4>
+        <p>Remzi Arpaci-Dusseau, Andrea Arpaci-Dusseau <a href="http://pages.cs.wisc.edu/~remzi/OSTEP/" class="label label-primary pull-right">Online Version</a>
+        </p>
+    </div>
+</div>
+</div>
+<div class="col-md-4">
+<h3>Unix Tutorials</h3>
+<ul>
+<li><a href="http://linuxcommand.org/lc3_learning_the_shell.php">Learning the Shell</a></li>
+<li><a href="http://www.ee.surrey.ac.uk/Teaching/Unix/">UNIX / Linux Tutorial for Beginners</a></li>
+<li><a href="https://www.freebsd.org/doc/handbook/basics.html">FreeBSD Handbook - UNIX Basics</a></li>
+</ul>
+</div>
+<div class="col-md-4">
+<h3>Git Tutorials</h3>
+<ul>
+<li><a href="https://git-scm.com/">Git-Scm</a></li>
+<li><a href="https://git-scm.com/book/en/v2">Pro Git</a></li>
+<li><a href="https://try.github.io/">Resource to learn Git</a></li>
+</ul>
+</div>
+<div class="col-md-4">
+<h3>Manual Pages</h3>
+<ul>
+<li><a href="http://man7.org/linux/man-pages/index.html">Linux man pages online</a></li>
+<li><a href="https://www.freebsd.org/cgi/man.cgi">FreeBSD man pages</a></li>
+<li><a href="http://pubs.opengroup.org/onlinepubs/9699919799/">POSIX Standard</a></li>
+</ul>
+</div>
+<div class="col-md-4">
+<h3>Communication</h3>
+<ul>
+<li><a href="http://beej.us/guide/bgipc/">Beej's Guide to Unix Interprocess Communication</a></li>
+<li><a href="http://beej.us/guide/bgnet/">Beej's Guide to Network Programming</a></li>
+</ul>
+</div>
+<div class="col-md-4">
+<h3>Pthreads</h3>
+<ul>
+<li><a href="https://computing.llnl.gov/tutorials/pthreads/">POSIX Threads Programming</a></li>
+<li><a href="https://randu.org/tutorials/threads/">Multithreaded Programming (POSIX pthreads Tutorial)</a></li>
+</ul>
+</div>
+</div>
+
+
+	    <div class="row">
+		<hr/>
+
+		<footer class="text-center">
+		    <p class="text-muted">
+		    <small>
+		    Built using
+		    <a href="https://getbootstrap.com/">Bootstrap</a>,
+		    <a href="https://fontawesome.com/">Font Awesome</a>, and
+		    <a href="http://www.python.org/">Python</a>.
+		    <br/>
+		    &copy; 2024 <a href="http://www.nd.edu">University of Notre Dame</a>
+		    </small>
+		    </p>
+		</footer>
+	    </div>
+
+	</div> <!-- /container -->
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	
+    </body>
+</html>
+

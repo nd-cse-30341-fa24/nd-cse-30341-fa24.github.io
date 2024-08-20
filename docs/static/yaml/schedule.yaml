@@ -24,9 +24,15 @@
         topics:         System Calls
         assignments:
           - Reading 02
+        items:
+          - name:       Slide 03
+            link:       https://docs.google.com/presentation/d/10e-SJ3HMl1Csjo3645NrUMDqTUqTRO1sESrMV1aS2N0/edit?usp=sharing
 
       - date:           Thu 09/05
         topics:         Processes
+        items:
+          - name:       Slide 04
+            link:       https://docs.google.com/presentation/d/1nn3gRO5SdGB7NCHctDJyzoCCdjO3n9v6R2ryHTn1t-c/edit?usp=sharing
 
 - name:     Scheduling
   days:
@@ -34,8 +40,15 @@
         topics:         FIFO, Round Robin
         assignments:
           - Reading 03
+        items:
+          - name:       Slide 05
+            link:       https://docs.google.com/presentation/d/1bw8LexsLl8qfdS6FGffWd7fgIRybgb0sFBk4VN6aw9c/edit?usp=sharing
+
       - date:           Thu 09/12
         topics:         MLFQ, Lottery
+        items:
+          - name:       Slide 06
+            link:       https://docs.google.com/presentation/d/1gQ_OMiAF3Gv2FUkES4G75z4uUZly9oybhMbmaSSJYKE/edit?usp=sharing
 
       - date:           Sun 09/15
         assignments:

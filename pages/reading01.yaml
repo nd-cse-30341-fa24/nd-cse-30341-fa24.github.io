@@ -228,6 +228,19 @@ body:       |
     [Setup a Personal Access Token]: https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
     [Setup SSH Keys]: https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/about-ssh
 
+    <div class="alert alert-warning" markdown="1">
+    #### <i class="fa fa-server"></i> Student Machines
+
+    As a reminder, students in this class have access to the following **student** machines:
+
+    - `student05.cse.nd.edu`
+    - `student10.cse.nd.edu`
+    - `student11.cse.nd.edu`
+    - `student12.cse.nd.edu`
+    - `student13.cse.nd.edu`
+
+    </div>
+
     <div class="alert alert-danger" markdown="1">
     #### <i class="fa fa-github"></i> GitHub Repository
 

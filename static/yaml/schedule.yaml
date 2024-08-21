@@ -58,6 +58,9 @@
   days:
       - date:           Tue 09/17
         topics:         Events
+        items:
+          - name:       Slide 07
+            link:       https://docs.google.com/presentation/d/15PBS54UWIxyRdyl_NHoYtX10cJuc7zFv4kp9kIxZ0-0/edit?usp=sharing
 
       - date:           Thu 09/19
         topics:         ''
@@ -72,9 +75,15 @@
         topics:         Threads
         assignments:
           - Reading 04
+        items:
+          - name:       Slide 08
+            link:       https://docs.google.com/presentation/d/12Outl1slSmPfQWMOt9wU51KwNhWvIKZVTH67gJtWteE/edit?usp=sharing
 
       - date:           Thu 09/26
         topics:         Locks
+        items:
+          - name:       Slide 09
+            link:       https://docs.google.com/presentation/d/1C88HP-zQ2g2_4UGmM4oF_1EE1go8aSRNvNmbzV3rluY/edit?usp=sharing
 
 - name:     Condition Variables, Semaphores
   days:
@@ -82,8 +91,15 @@
         topics:         Condition Variables
         assignments:
           - Reading 05
+        items:
+          - name:       Slide 10
+            link:       https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing
+
       - date:           Thu 10/03
         topics:         Semaphores
+        items:
+          - name:       Slide 11
+            link:       https://docs.google.com/presentation/d/1RdfAkMmeyt7Qdt2LD2aAobl4zqi6iGmxMDdexQNGSiY/edit?usp=sharing
 
 - name:     Structures, Patterns
   days:
@@ -103,6 +119,9 @@
   days:
       - date:           Tue 10/15
         topics:         Concurrency Bugs
+        items:
+          - name:       Slide 12
+            link:       https://docs.google.com/presentation/d/1I7eq9t7MF4JQOMgC4LOXYySLKlVXOF5XR0P_sgMQu0Q/edit?usp=sharing
 
       - date:           Thu 10/17
         topics:         ''

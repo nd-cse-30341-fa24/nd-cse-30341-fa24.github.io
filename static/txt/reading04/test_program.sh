@@ -268,7 +268,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (strace)"
 strace -e clone,clone3 ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 2 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(grep -c CLONE_THREAD $WORKSPACE/test) -lt $(echo $ARGUMENTS | wc -w) ]; then
     error "Failure (Strace)"
 else

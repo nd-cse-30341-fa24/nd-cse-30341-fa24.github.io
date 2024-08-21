@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Reading 05: Condition Variables</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="static/css/blugold.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<style>
+	body {
+	    padding: 10px;
+	}
+	</style>
+    </head>
+    <body>
+	<div class="container">
+
+	    <div class="row">
+		<div class="page-header">
+		    <ul class="nav nav-pills pull-right">
+			
+			<li><a href="index.html"><i class="fa fa-desktop"></i> <span class="visible-md-inline visible-lg-inline">Home</span></a></li>
+			
+		    </ul>
+		    <h1><i class="fa fa-book"></i> Reading 05: Condition Variables</h1>
+		</div>
+	    </div>
+
+            
+<p><strong>Everyone</strong>:</p>
+<p>Last week, we have studied two different forms of <a href="https://en.wikipedia.org/wiki/Concurrency_(computer_science)">concurrency</a>:
+<a href="https://en.wikipedia.org/wiki/Event-driven_programming">event-based programming</a> via <a href="http://man7.org/linux/man-pages/man2/select.2.html">select</a>/<a href="http://man7.org/linux/man-pages/man2/poll.2.html">poll</a> and <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a> (ala
+<a href="http://man7.org/linux/man-pages/man7/pthreads.7.html">pthreads</a>).  While the former allowed us to overlap I/O and computation,
+it did not allow us to take advantage of parallelism.  To do harness
+multiple hardware resources, we will need to utilize <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a>.
+Unfortunately, using <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a> also means we need to employ <a href="https://en.wikipedia.org/wiki/Lock_(computer_science)">locks</a> and
+<a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)">condition variables</a> to ensure correct concurrent access to shared
+resources.</p>
+<p>The readings this week focus on how <a href="https://en.wikipedia.org/wiki/Lock_(computer_science)">locks</a> and <a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)">condition variables</a> work
+together and how we can use them to implement <a href="https://en.wikipedia.org/wiki/Concurrent_data_structure">concurrent data structures</a>.</p>
+<div class="alert alert-info">
+<h4 id="tldr"><i class="fa fa-search"></i> TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h4>
+<p>For this reading assignment, you are to read about using <a href="https://en.wikipedia.org/wiki/Lock_(computer_science)">locks</a> and
+<a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)">condition variables</a> to synchronize <a href="http://man7.org/linux/man-pages/man7/pthreads.7.html">pthreads</a>, submit your responses to
+the <a href="static/json/reading05.json">Reading 05 Quiz</a>, and modify your program to use a <a href="https://en.wikipedia.org/wiki/Thread_pool">thread pool</a> and
+the <a href="https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem">producer consumer</a> model.</p>
+</div>
+<p><img src="static/img/ostep.jpg" class="pull-right"></p>
+<h2 id="reading">Reading<a class="headerlink" href="#reading" title="Permanent link">&para;</a></h2>
+<p>The readings for this week are:</p>
+<ol>
+<li>
+<p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/">Operating Systems: Three Easy Pieces</a></p>
+<ol>
+<li><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/threads-locks-usage.pdf">Lock-based Concurrent Data Structures</a></li>
+<li><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/threads-cv.pdf">Condition Variables</a></li>
+</ol>
+</li>
+</ol>
+<h3 id="optional-readings">Optional Readings<a class="headerlink" href="#optional-readings" title="Permanent link">&para;</a></h3>
+<p>The following are optional related readings:</p>
+<ol>
+<li>
+<p><a href="http://austingwalters.com/multithreading-producer-consumer-problem/">Multithreading: Producer Consumer Problem</a></p>
+</li>
+<li>
+<p><a href="https://people.csail.mit.edu/shanir/publications/concurrent-data-structures.pdf">Concurrent Data Structures</a></p>
+</li>
+<li>
+<p><a href="https://www.cs.cornell.edu/courses/cs3110/2010fa/lectures/lec18.html">Lecture 18: Concurrency—Producer/Consumer Pattern and Thread Pools</a></p>
+</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<p>Once you have done the readings, answer the following <a href="static/json/reading05.json">Reading 05 Quiz</a>
+questions:</p>
+<div id="quiz-questions"></div>
+
+<div id="quiz-responses"></div>
+
+<script src="static/js/dredd-quiz.js"></script>
+<script>
+loadQuiz('static/json/reading05.json');
+</script>
+
+<pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+<h2 id="program">Program<a class="headerlink" href="#program" title="Permanent link">&para;</a></h2>
+<p>In <a href="reading04.html">Reading 04</a>, you created a [thread] to compute the <a href="https://man7.org/linux/man-pages/man1/sha1sum.1.html">sha1sum</a> of each
+argument.  This provides concurrency and parallelism, but it is possible to
+overwhelm the system and waste time if there are a lot of arguments (and
+thus a lot of threads).  Instead of creating <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a> on-demand, we will
+instead use a <a href="https://en.wikipedia.org/wiki/Thread_pool">thread pool</a> to create <code>2</code> workers then feed them work via
+the concurrent <a href="https://github.com/nd-cse-30341-fa24/examples/tree/master/lecture10">queue</a> discussed in <a href="https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing">Lecture 10</a>.</p>
+<p>In summary, you are to modify the program in <a href="reading04.html">Reading 04</a> to use the
+<a href="https://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem">producer consumer</a> model where there are <code>2</code> consumers threads (ie.
+<code>sha1sum_thread</code>) and <code>1</code> producer thread (ie. <code>main</code>).</p>
+<div class="alert alert-success">
+<p><strong>Note</strong>: You will want to copy the <code>queue.h</code>, <code>queue.c</code>, and <code>thread.h</code>
+  files from the <a href="https://github.com/nd-cse-30341-fa24/examples/tree/master/lecture10">Lecture 10</a> example.  Additionally, you will need
+  to modify the <code>Queue</code> to support storing <a href="https://en.wikipedia.org/wiki/C_string_handling">c-string</a>s (ie. <code>char *</code>)
+  instead of <code>int</code>s.</p>
+<p>You may choose between either <code>queue2.c</code> or <code>queue3.c</code>.</p>
+</div>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>The usage and output of your program should be the same as <a href="https://man7.org/linux/man-pages/man1/sha1sum.1.html">sha1sum</a>:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>./program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb">  </span><span style="color: #3D7B7B; font-style: italic"># Compute SHA1 of Makefile</span>
+50bb7f7ccf1ca089f3c5eaff5fe95e56ddbe53a5<span style="color: #bbbbbb">  </span>Makefile
+
+$<span style="color: #bbbbbb"> </span><span style="color: #008000">echo</span><span style="color: #bbbbbb"> </span><span style="color: #19177C">$?</span><span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># Check exit status</span>
+<span style="color: #666666">0</span>
+
+$<span style="color: #bbbbbb"> </span>./program<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb">      </span><span style="color: #3D7B7B; font-style: italic"># Handle invalid files</span>
+
+$<span style="color: #bbbbbb"> </span><span style="color: #008000">echo</span><span style="color: #bbbbbb"> </span><span style="color: #19177C">$?</span><span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># Check exit status</span>
+<span style="color: #666666">1</span>
+</code></pre></div>
+
+<h3 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>Your code must compile cleanly with no warnings.</p>
+</li>
+<li>
+<p>Your program may only use I/O system calls such as <a href="http://man7.org/linux/man-pages/man2/open.2.html">open</a>, <a href="http://man7.org/linux/man-pages/man2/read.2.html">read</a>, and
+  <a href="http://man7.org/linux/man-pages/man2/close.2.html">close</a> to access the contents of each file.</p>
+</li>
+<li>
+<p>Your program must use <a href="http://man7.org/linux/man-pages/man2/stat.2.html">stat</a> to get the size of any files.</p>
+</li>
+<li>
+<p>Your program must use the <code>SHA1()</code> function provided by <a href="https://www.openssl.org">OpenSSL</a>.</p>
+</li>
+<li>
+<p>Your program must not have any resource leaks or memory errors as
+  detected by <a href="https://www.valgrind.org/">valgrind</a>.</p>
+</li>
+<li>
+<p>Your program must use <code>Thread</code>, <code>thread_create</code>, <code>thread_join</code> from
+  <code>thread.h</code> discussed in <a href="https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing">Lecture 10</a>.</p>
+</li>
+<li>
+<p>Your program must use <code>Queue</code>, <code>queue_create</code>, <code>queue_push</code>, <code>queue_pop</code>,
+  and <code>queue_delete</code> from <code>queue.h</code> discussed in <a href="https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing">Lecture 10</a>.</p>
+</li>
+<li>
+<p>Each thread must run concurrently (ie. without waiting for another
+  thread to complete first).</p>
+</li>
+</ul>
+<div class="alert alert-warning">
+<p><strong>Note</strong>: To link properly to the <a href="https://en.wikipedia.org/wiki/SHA-1">SHA1</a> functions, you will need to add
+  <code>-lcrypto</code> to the <code>LIBS</code> variable in your <code>Makefile</code>.  You will also need
+  to add the <code>-pthread</code> flag to your <code>CFLAGS</code>.</p>
+<p>Make sure your <code>program</code> links with <code>queue.c</code> in addition to <code>program.c</code>.</p>
+</div>
+<h3 id="hints">Hints<a class="headerlink" href="#hints" title="Permanent link">&para;</a></h3>
+<p>You can define the following constants to make your life easier:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #9C6500">#define MAX_THREADS 2                 </span><span style="color: #3D7B7B; font-style: italic">/* Number of threads in thread pool */</span>
+<span style="color: #9C6500">#define QSIZE       4                 </span><span style="color: #3D7B7B; font-style: italic">/* Maximum size of Queue structure */</span>
+<span style="color: #9C6500">#define SENTINEL    (const char *)-1  </span><span style="color: #3D7B7B; font-style: italic">/* Sentinel to mark end of Queue */</span>
+</code></pre></div>
+
+<p>You will need to modify your <code>sha1sum_thread</code> from [Reading 05] into the
+following structure:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #B00040">void</span><span style="color: #bbbbbb"> </span><span style="color: #666666">*</span><span style="color: #0000FF">sha1sum_thread</span>(<span style="color: #B00040">void</span><span style="color: #bbbbbb"> </span><span style="color: #666666">*</span>arg)<span style="color: #bbbbbb"> </span>{
+<span style="color: #bbbbbb">    </span>Queue<span style="color: #bbbbbb"> </span><span style="color: #666666">*</span>q<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>(Queue<span style="color: #bbbbbb"> </span><span style="color: #666666">*</span>)arg;
+<span style="color: #bbbbbb">    </span>...
+<span style="color: #bbbbbb">    </span><span style="color: #008000; font-weight: bold">while</span><span style="color: #bbbbbb"> </span>(...)<span style="color: #bbbbbb"> </span>{
+<span style="color: #bbbbbb">        </span>path<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>queue_pop(q);
+<span style="color: #bbbbbb">        </span>...
+
+<span style="color: #bbbbbb">        </span><span style="color: #008000; font-weight: bold">if</span><span style="color: #bbbbbb"> </span>(sha1sum_file(path,<span style="color: #bbbbbb"> </span>cksum))<span style="color: #bbbbbb"> </span>{
+<span style="color: #bbbbbb">            </span>...
+<span style="color: #bbbbbb">        </span>}<span style="color: #bbbbbb"> </span><span style="color: #008000; font-weight: bold">else</span><span style="color: #bbbbbb"> </span>{
+<span style="color: #bbbbbb">            </span>...
+<span style="color: #bbbbbb">        </span>}
+<span style="color: #bbbbbb">    </span>}
+<span style="color: #bbbbbb">    </span>...
+<span style="color: #bbbbbb">    </span><span style="color: #008000; font-weight: bold">return</span><span style="color: #bbbbbb"> </span>(<span style="color: #B00040">void</span><span style="color: #bbbbbb"> </span><span style="color: #666666">*</span>)failures;
+}
+</code></pre></div>
+
+<p>This [thread] function will repeatedly pop from the <code>Queue</code> until it
+reaches a <code>SENTINEL</code> value.  For each value popped from the <code>Queue</code>, the
+[thread] should compute the <a href="https://man7.org/linux/man-pages/man1/sha1sum.1.html">sha1sum</a> of the <code>path</code> and track if there are
+any failures.  At the end, the [thread] should return the number of failed
+<a href="https://man7.org/linux/man-pages/man1/sha1sum.1.html">sha1sum</a> computations.</p>
+<p>To implement the <a href="https://en.wikipedia.org/wiki/Thread_pool">thread pool</a> pattern, you will need to modify your <code>main</code>
+function to look like the following:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>function main():
+    Thread thread[MAX_THREAD]  # Thread array
+    Queue *q = queue_create(SENTINEL, QSIZE)
+
+    # Start thread pool
+    For each thread:
+        Create a thread stored in thread[i] that runs sha1sum_thread on q.
+
+    # Producer: send work to queue
+    For each argument:
+        Push argument into q
+
+    Push SENTINEL into q
+
+    # Clean up thread pool
+    For each thread:
+        Join thread[i] and aggregate failures.
+</code></pre></div>
+
+<h2 id="submission">Submission<a class="headerlink" href="#submission" title="Permanent link">&para;</a></h2>
+<p>To submit you work, follow the same process outlined in <a href="reading01.html">Reading 01</a>:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>switch<span style="color: #bbbbbb"> </span>master<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Make sure we are in master branch</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>pull<span style="color: #bbbbbb"> </span>--rebase<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Make sure we are up-to-date with GitLab</span>
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>checkout<span style="color: #bbbbbb"> </span>-b<span style="color: #bbbbbb"> </span>reading05<span style="color: #bbbbbb">           </span><span style="color: #3D7B7B; font-style: italic"># Create reading05 branch and check it out</span>
+
+$<span style="color: #bbbbbb"> </span><span style="color: #008000">cd</span><span style="color: #bbbbbb"> </span>reading05<span style="color: #bbbbbb">                        </span><span style="color: #3D7B7B; font-style: italic"># Go into reading05 folder</span>
+$<span style="color: #bbbbbb"> </span><span style="color: #19177C">$EDITOR</span><span style="color: #bbbbbb"> </span>answers.json<span style="color: #bbbbbb">                </span><span style="color: #3D7B7B; font-style: italic"># Edit your answers.json file</span>
+
+$<span style="color: #bbbbbb"> </span>../.scripts/check.py<span style="color: #bbbbbb">                </span><span style="color: #3D7B7B; font-style: italic"># Check reading05 quiz</span>
+Checking<span style="color: #bbbbbb"> </span>reading05<span style="color: #bbbbbb"> </span>quiz<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb">      </span>Q1<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.30
+<span style="color: #bbbbbb">      </span>Q2<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.20
+<span style="color: #bbbbbb">      </span>Q3<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.30
+<span style="color: #bbbbbb">      </span>Q4<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.40
+<span style="color: #bbbbbb">      </span>Q5<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.20
+<span style="color: #bbbbbb">      </span>Q6<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.60
+<span style="color: #bbbbbb">   </span>Score<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00<span style="color: #bbbbbb"> </span>/<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00
+<span style="color: #bbbbbb">  </span>Status<span style="color: #bbbbbb"> </span>Success
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>add<span style="color: #bbbbbb"> </span>answers.json<span style="color: #bbbbbb">                </span><span style="color: #3D7B7B; font-style: italic"># Add answers.json to staging area</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>commit<span style="color: #bbbbbb"> </span>-m<span style="color: #bbbbbb"> </span><span style="color: #BA2121">&quot;Reading 05: Quiz&quot;</span><span style="color: #bbbbbb">    </span><span style="color: #3D7B7B; font-style: italic"># Commit work</span>
+
+$<span style="color: #bbbbbb"> </span><span style="color: #19177C">$EDITOR</span><span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Edit your program.c file</span>
+
+$<span style="color: #bbbbbb"> </span>make<span style="color: #bbbbbb"> </span>test-program<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Check reading05 program</span>
+Testing<span style="color: #bbbbbb"> </span>reading05<span style="color: #bbbbbb"> </span>program...
+<span style="color: #bbbbbb"> </span>I/O<span style="color: #bbbbbb"> </span>System<span style="color: #bbbbbb"> </span>Calls<span style="color: #bbbbbb">                                             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>I/O<span style="color: #bbbbbb"> </span>Functions<span style="color: #bbbbbb">                                                </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>Memory<span style="color: #bbbbbb"> </span>Functions<span style="color: #bbbbbb">                                             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>SHA1<span style="color: #bbbbbb"> </span>Functions<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>Process<span style="color: #bbbbbb"> </span>System<span style="color: #bbbbbb"> </span>Calls<span style="color: #bbbbbb">                                         </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>Thread<span style="color: #bbbbbb"> </span>Functions<span style="color: #bbbbbb">                                             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>Queue<span style="color: #bbbbbb"> </span>Functions<span style="color: #bbbbbb">                                              </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb">                                                      </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">                                           </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">                                             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb">                                             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">                                  </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">                                    </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb">                                   </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">                        </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">                          </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb">                         </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">              </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">                </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb">                    </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">         </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">           </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>/bin/ls<span style="color: #bbbbbb"> </span>/bin/bash<span style="color: #bbbbbb">                 </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>/bin/ls<span style="color: #bbbbbb"> </span>/bin/bash<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">      </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>/bin/ls<span style="color: #bbbbbb"> </span>/bin/bash<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">        </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>fdsa<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb">               </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>fdsa<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>valgrind<span style="color: #666666">)</span><span style="color: #bbbbbb">    </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>program<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb"> </span>fdsa<span style="color: #bbbbbb"> </span>README.md<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb"> </span>asdf<span style="color: #bbbbbb"> </span><span style="color: #666666">(</span>strace<span style="color: #666666">)</span><span style="color: #bbbbbb">      </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb">   </span>Score<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00<span style="color: #bbbbbb"> </span>/<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00
+<span style="color: #bbbbbb">  </span>Status<span style="color: #bbbbbb"> </span>Success
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>add<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Add program.c to staging area</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>add<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb">                    </span><span style="color: #3D7B7B; font-style: italic"># Add Makefile to staging area</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>commit<span style="color: #bbbbbb"> </span>-m<span style="color: #bbbbbb"> </span><span style="color: #BA2121">&quot;Reading 05: Code&quot;</span><span style="color: #bbbbbb">    </span><span style="color: #3D7B7B; font-style: italic"># Commit work</span>
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>push<span style="color: #bbbbbb"> </span>-u<span style="color: #bbbbbb"> </span>origin<span style="color: #bbbbbb"> </span>reading05<span style="color: #bbbbbb">        </span><span style="color: #3D7B7B; font-style: italic"># Push branch to GitHub</span>
+</code></pre></div>
+
+<div class="alert alert-success">
+<h4 id="pull-request"><i class="fa fa-github"></i> Pull Request<a class="headerlink" href="#pull-request" title="Permanent link">&para;</a></h4>
+<p>Once you have committed your work and pushed it to <a href="https://github.com">GitHub</a>, remember to
+create a <strong>pull request</strong> and assign it to the appropriate <strong>teaching
+assistant</strong> from the <a href="reading05_tas.html">Reading 05 TA List</a>.</p>
+</div>
+
+
+	    <div class="row">
+		<hr/>
+
+		<footer class="text-center">
+		    <p class="text-muted">
+		    <small>
+		    Built using
+		    <a href="https://getbootstrap.com/">Bootstrap</a>,
+		    <a href="https://fontawesome.com/">Font Awesome</a>, and
+		    <a href="http://www.python.org/">Python</a>.
+		    <br/>
+		    &copy; 2024 <a href="http://www.nd.edu">University of Notre Dame</a>
+		    </small>
+		    </p>
+		</footer>
+	    </div>
+
+	</div> <!-- /container -->
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	
+    </body>
+</html>
+

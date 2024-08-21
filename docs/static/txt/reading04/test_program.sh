@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKSPACE=/tmp/reading05.$(id -u)
+WORKSPACE=/tmp/reading04.$(id -u)
 FAILURES=0
 POINTS=2
 
@@ -58,7 +58,7 @@ mkdir $WORKSPACE
 trap "cleanup" EXIT
 trap "cleanup 1" INT TERM
 
-echo "Testing reading05 program ..."
+echo "Testing reading04 program ..."
 
 printf " %-60s ... " "I/O System Calls"
 if ! grep_all "open read close stat" program.c; then
@@ -268,7 +268,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (strace)"
 strace -e clone,clone3 ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 2 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(grep -c CLONE_THREAD $WORKSPACE/test) -lt $(echo $ARGUMENTS | wc -w) ]; then
     error "Failure (Strace)"
 else

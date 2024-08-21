@@ -85,7 +85,7 @@
           - name:       Slide 09
             link:       https://docs.google.com/presentation/d/1C88HP-zQ2g2_4UGmM4oF_1EE1go8aSRNvNmbzV3rluY/edit?usp=sharing
 
-- name:     Condition Variables, Semaphores
+- name:     Condition Variables
   days:
       - date:           Tue 10/01
         topics:         Condition Variables
@@ -96,17 +96,17 @@
             link:       https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing
 
       - date:           Thu 10/03
+        topics:         Structures
+
+- name:     Semaphores
+  days:
+      - date:           Tue 10/08
         topics:         Semaphores
+        assignments:
+          - Reading 06
         items:
           - name:       Slide 11
             link:       https://docs.google.com/presentation/d/1RdfAkMmeyt7Qdt2LD2aAobl4zqi6iGmxMDdexQNGSiY/edit?usp=sharing
-
-- name:     Structures, Patterns
-  days:
-      - date:           Tue 10/08
-        topics:         Structures
-        assignments:
-          - Reading 06
 
       - date:           Thu 10/10
         topics:         Patterns

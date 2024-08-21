@@ -194,7 +194,7 @@ body:       |
     To submit you work, follow the same process outlined in [Reading 01]:
 
         :::bash
-        $ git checkout master                 # Make sure we are in master branch
+        $ git switch master                   # Make sure we are in master branch
 
         $ git pull --rebase                   # Make sure we are up-to-date with GitHub
 
@@ -268,14 +268,14 @@ body:       |
 
     </div>
 
-    [Operating Systems: Three Easy Pieces]:     http://pages.cs.wisc.edu/~remzi/OSTEP/
-    [JSON]:                   http://www.json.org/
-    [git-branch]:             https://git-scm.com/docs/git-branch
-    [dredd]:                  https://dredd.h4x0r.space
-    [GitHub]:                 https://github.com
-    [valgrind]:               https://www.valgrind.org/
-    [Reading 01]:             reading01.html
-    [Reading 03]:             reading03.html
+    [Operating Systems: Three Easy Pieces]: http://pages.cs.wisc.edu/~remzi/OSTEP/
+    [JSON]: http://www.json.org/
+    [git-branch]: https://git-scm.com/docs/git-branch
+    [dredd]: https://dredd.h4x0r.space
+    [GitHub]: https://github.com
+    [valgrind]: https://www.valgrind.org/
+    [Reading 01]: reading01.html
+    [Reading 03]: reading03.html
 
-    [Reading 04 Quiz]:        static/json/reading04.json
-    [Reading 04 TA List]:     reading04_tas.html
+    [Reading 04 Quiz]: static/json/reading04.json
+    [Reading 04 TA List]: reading04_tas.html

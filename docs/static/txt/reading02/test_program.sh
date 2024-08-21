@@ -96,7 +96,7 @@ fi
 printf " %-60s ... " "program"
 ./program &> $WORKSPACE/test
 if [ $? -ne 0 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 else
     echo "Success"
 fi
@@ -104,7 +104,7 @@ fi
 printf " %-60s ... " "program (valgrind)"
 valgrind --leak-check=full ./program &> $WORKSPACE/test
 if [ $? -ne 0 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else
@@ -124,7 +124,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (valgrind)"
 valgrind --leak-check=full ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 0 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else
@@ -144,7 +144,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (valgrind)"
 valgrind --leak-check=full ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 0 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else
@@ -164,7 +164,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (valgrind)"
 valgrind --leak-check=full ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 0 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else
@@ -184,7 +184,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (valgrind)"
 valgrind --leak-check=full ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 1 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else
@@ -203,7 +203,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (valgrind)"
 valgrind --leak-check=full ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 2 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else
@@ -223,7 +223,7 @@ fi
 printf " %-60s ... " "program $ARGUMENTS (valgrind)"
 valgrind --leak-check=full ./program $ARGUMENTS &> $WORKSPACE/test
 if [ $? -ne 0 ]; then
-    error "Failure (Exit Status)"
+    error "Failure (Exit Code)"
 elif [ $(awk '/ERROR SUMMARY:/ {print $4}' $WORKSPACE/test) -ne 0 ]; then
     error "Failure (Valgrind)"
 else

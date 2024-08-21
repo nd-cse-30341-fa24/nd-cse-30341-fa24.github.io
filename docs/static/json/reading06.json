@@ -24,10 +24,6 @@
         }
     },
     "q04": {
-        "type": "blank",
-        "question": "<p><strong>\n\nSuppose you and your friends are going <i>slacklining</i>. Unfortunately,\nthe slackline can only support up to <i>three</i> people on it at a time.\u00a0\nTherefore, if they are many people, they will need to wait before they can\nget onto the slackline.\n\n</strong></p>\n\n<p>Assuming each person performs the following procedure:</p>\n\n<pre>\nget_on()\u00a0 \u00a0 \u00a0 \u00a0 \u00a0 // Get on slackline if there is enough room\ndo_slack_line() \u00a0 // Attempt to walk across slackline\nget_off() \u00a0 \u00a0 \u00a0 \u00a0 // Get off of slackline\n</pre>\n\n<p>Model this <b>synchronization problem</b> using POSIX <b>threads</b>,\n<b>mutexes</b>, or <b>condition variables</b>.  Assume each person is\nrepresented as a <b>thread</b> that calls the functions above to get on the\nslackline, cross the slackline, and then get off the slackline.</p>\n\n<p>Assuming the following global variables:</p>\n\n<pre>\nsize_t CAPACITY = 3  // Maximum number of people on slackline\nsize_t Slackers = 0  // Current number of people on slackline\n\nMutex  Lock     \nCond   Line\n</pre>\n\n<p>Select and order the following lines of code to implement each of the\nfunctions below:</p>\n\n<pre>\nA. mutex_lock(Lock)\nB. mutex_unlock(Lock)\nC. cond_wait(Line, Lock)\nD. cond_signal(Line)\nE. while Slackers >= CAPACITY\nF. while Slackers < CAPACITY\nG. Slackers++\nH. Slackers--\n</pre>\n\n<p>\n<ol>\n<li>Select and order the lines of code above to implement the\n<tt>get_on()</tt> function. ____</li>\n\n<li>Select and order the lines of code above to implement the\n<tt>get_off()</tt> function. ____</li>\n</ol>\n</p>\n\n<center>\n<p><b>Put a single space between each line of code (ie. \"A B C\")).</b></p>\n</center>\n"
-    },
-    "q05": {
         "type": "single",
         "question": "<strong>\n\nTo solve the Dining Philosopher's problem, the book proposes the following\nsolution:\n\n</strong>\n",
         "responses": {
@@ -38,15 +34,15 @@
             "forks": "Buy more forks."
         }
     },
-    "q06": {
+    "q05": {
         "type": "blank",
         "question": "<strong>\nTwo types of non-deadlock concurrency bugs are:\n</strong>\n\n<ol>\n\n<li><b>____</b>: These bugs occur when the assumption of atomicity is incorrect.</li>\n\n<li><b>____</b>: These bugs occur when the desired order of operations is\nnot enforced during execution.</li>\n\n</ol>\n"
     },
-    "q07": {
+    "q06": {
         "type": "blank",
         "question": "<strong>\n\nDeadlock occurs when the following four conditions hold:\n\n</strong>\n\n<ol>\n\n<li><b>____</b>: There exists a circular chain of threads such that each\nthread holds one or more resources that are being requested by the next\nthread in the chain.</li>\n\n<li><b>____</b>: Resources cannot be forcibly removed from threads that are\nholding them.</li>\n\n<li><b>____</b>: Threads hold resources allocated to them while waiting for\nadditional resources.</li>\n\n<li><b>____</b>: Threads claim exclusive control of resources that they\nrequire.</li>\n\n</ol>\n"
     },
-    "q08": {
+    "q07": {
         "type": "multiple",
         "question": "<strong>\n\nWhich of the following are ways to prevent deadlock (choose all that apply)?\n\n</strong>\n",
         "responses": {
@@ -56,12 +52,16 @@
             "lockfree": "Avoid locks by using atomic hardware instructions."
         }
     },
-    "q09": {
+    "q08": {
         "type": "blank",
         "question": "<strong>\n\nRather than prevent deadlock, we can instead try to avoid it by having a\nsmart ____ that will consider the dependencies between threads or by having a\nservice that ____ deadlock and provides ____ techniques.\n\n</strong>\n"
     },
+    "q09": {
+        "type": "blank",
+        "question": "<p><strong>\n\nSuppose you and your friends are going <i>slacklining</i>. Unfortunately,\nthe slackline can only support up to <i>three</i> people on it at a time.\u00a0\nTherefore, if they are many people, they will need to wait before they can\nget onto the slackline.\n\n</strong></p>\n\n<p>Assuming each person performs the following procedure:</p>\n\n<pre>\nget_on()\u00a0 \u00a0 \u00a0 \u00a0 \u00a0 // Get on slackline if there is enough room\ndo_slack_line() \u00a0 // Attempt to walk across slackline\nget_off() \u00a0 \u00a0 \u00a0 \u00a0 // Get off of slackline\n</pre>\n\n<p>Model this <b>synchronization problem</b> using POSIX <b>threads</b>,\n<b>mutexes</b>, or <b>condition variables</b>.  Assume each person is\nrepresented as a <b>thread</b> that calls the functions above to get on the\nslackline, cross the slackline, and then get off the slackline.</p>\n\n<p>Assuming the following global variables:</p>\n\n<pre>\nsize_t CAPACITY = 3  // Maximum number of people on slackline\nsize_t Slackers = 0  // Current number of people on slackline\n\nMutex  Lock     \nCond   Line\n</pre>\n\n<p>Select and order the following lines of code to implement each of the\nfunctions below:</p>\n\n<pre>\nA. mutex_lock(Lock)\nB. mutex_unlock(Lock)\nC. cond_wait(Line, Lock)\nD. cond_signal(Line)\nE. while Slackers >= CAPACITY\nF. while Slackers < CAPACITY\nG. Slackers++\nH. Slackers--\n</pre>\n\n<p>\n<ol>\n<li>Select and order the lines of code above to implement the\n<tt>get_on()</tt> function. ____</li>\n\n<li>Select and order the lines of code above to implement the\n<tt>get_off()</tt> function. ____</li>\n</ol>\n</p>\n\n<center>\n<p><b>Put a single space between each line of code (ie. \"A B C\")).</b></p>\n</center>\n"
+    },
     "q10": {
         "type": "blank",
-        "question": "\n<p><strong>\n\nSuppose you and your friends are going to Salsa night hosted by our beloved\n<i>Ramzi</i>. You are willing to dance, but only after at least <tt>2</tt>\nof your friends have started dancing.\n\n</strong></p>\n\n<p>Model this <b>synchronization problem</b> using POSIX <b>threads</b>\nand <b>semaphores</b>.  Assume each person is represented as a\n<b>thread</b> that calls one of the corresponding functions below\n(<tt>you_dance()</tt> for yourself and <tt>friend_dance()</tt> for each of\nyour friends).</p>\n\n<p>Assuming the following global variables:</p>\n\n<pre>\nsize_t MIN_FRIENDS = 2  // Minimum number of friends dancing before you will dance\nsize_t Friends     = 0  // Number of friends dancing\n\nSemaphore Lock     = 1\nSemaphore Dancing  = 0\n</pre>\n\n<p>Select and order the following lines of code to implement each of the\nfunctions below:</p>\n\n<pre>\nA. sem_wait(Lock)\nB. sem_post(Lock)\nC. sem_wait(Dancing)\nD. sem_post(Dancing)\nE. Friends++\nF. Friends--\nG. if Friends >= MIN_FRIENDS\nH. if Friends < MIN_FRIENDS\n</pre>\n\n<p>\n<ol>\n<li>Select and order the lines of code above to implement the\n<tt>you_dance()</tt> function. ____</li>\n\n<li>Select and order the lines of code above to implement the\n<tt>friend_dance()</tt> function. ____</li>\n</ol>\n</p>\n\n<center>\n<p><b>Put a single space between each line of code (ie. \"A B C\")).</b></p>\n</center>\n"
+        "question": "\n<p><strong>\n\nGiven the previous <i>slacklining</i> scenario, where the slackline can\nonly support up to <i>three</i> people on it at a time.\u00a0\n\n</strong></p>\n\n<p>Model this <b>synchronization problem</b> using POSIX <b>threads</b> and\n<b>semaphores</b>.  Assume each person is represented as a <b>thread</b>\nthat calls the functions above to get on the slackline, cross the\nslackline, and then get off the slackline.</p>\n\n<p>Assuming the following global variables:</p>\n\n<pre>\nSemaphore Line = ?\n</pre>\n\n<p>Select and order the following lines of code to implement each of the\nfunctions below:</p>\n\n<pre>\nA. sem_wait(Line)\nB. sem_post(Line)\nC. Line++\nD. Line--\nE. if Line == 0\nF. if Line > 0\n</pre>\n\n<p>\n<ol>\n<li>What value should the <tt>Line</tt> <b>semaphore</b> be initialized to? ____</li>\n\n<li>Select and order the lines of code above to implement the\n<tt>get_on()</tt> function. ____</li>\n\n<li>Select and order the lines of code above to implement the\n<tt>get_off()</tt> function. ____</li>\n</ol>\n</p>\n\n<center>\n<p><b>Put a single space between each line of code (ie. \"A B C\")).</b></p>\n</center>\n"
     }
 }

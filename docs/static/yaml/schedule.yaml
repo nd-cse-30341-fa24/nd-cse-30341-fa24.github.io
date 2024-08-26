@@ -50,12 +50,12 @@
           - name:       Slide 06
             link:       https://docs.google.com/presentation/d/1gQ_OMiAF3Gv2FUkES4G75z4uUZly9oybhMbmaSSJYKE/edit?usp=sharing
 
+- name:     Exam 01
+  days:
       - date:           Mon 09/16
         assignments:
           - Project 01
 
-- name:     Exam 01
-  days:
       - date:           Tue 09/17
         topics:         Events
         items:
@@ -111,12 +111,12 @@
       - date:           Thu 10/10
         topics:         Patterns
 
+- name:     Exam 02
+  days:
       - date:           Mon 10/14
         assignments:
           - Project 02
 
-- name:     Exam 02
-  days:
       - date:           Tue 10/15
         topics:         Concurrency Bugs
         items:
@@ -162,12 +162,12 @@
       - date:           Thu 11/14
         topics:         TLB / Multi-Level
 
+- name:     Exam 03
+  days:
       - date:           Mon 11/18
         assignments:
           - Project 03
 
-- name:     Exam 03
-  days:
       - date:           Tue 11/19
         topics:         Swapping
 

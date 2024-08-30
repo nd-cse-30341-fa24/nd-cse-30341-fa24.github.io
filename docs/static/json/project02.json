@@ -1,0 +1,40 @@
+{
+    "q1": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nWhich of the following statements regarding <b>threads</b>,\n<b>processes</b>, and <b>events</b> are true (select all that apply)?\n\n</strong>\n",
+        "responses": {
+            "threads_resources": "Threads require less resources than processes.",
+            "threads_shared": "Threads can communicate with each other using shared memory.",
+            "threads_cleanup": "Threads provide automatic resource cleanup on exit.",
+            "threads_parallel": "Threads can readily take advantage of parallel resources such as multiple CPU cores.",
+            "events_overhead": "Event-based I/O can be used to provide low overhead concurrency.",
+            "events_sync": "Event-based I/O can alleviate the need for explicit synchronization primitives.",
+            "events_parallel": "Event-based I/O can readily take advantage of parallel resources such as multiple CPU cores.",
+            "events_blocking": "Event-based I/O prefers blocking or long running operations."
+        }
+    },
+    "q2": {
+        "type": "multiple",
+        "question": "\n<strong>\n\nWhich of the following statements regarding <b>synchronization</b> and\n<b>deadlock</b> are true (select all that apply)?\n\n</strong>\n",
+        "responses": {
+            "monitor_mutex": "Monitors typically use mutexes and condition variables to provide safe concurrent access to data structures.",
+            "monitor_semaphore": "Monitors cannot be implemented using semaphores to provide safe concurrent access to data structures.",
+            "mutex_deadlock": "The use of mutexes helps prevents deadlock.",
+            "mutex_race": "The use of mutexes helps prevents race conditions.",
+            "mutex_cond": "You can use a mutex without a condition variable.",
+            "cond_deadlock": "The use of condition variables helps avoid deadlock.",
+            "cond_wait": "The use of condition variables helps avoid busy waiting.",
+            "cond_mutex": "You can use a condition variable without a mutex.",
+            "semaphore_deadlock": "The use of semaphores helps prevents deadlock.",
+            "semaphore_racewait": "The use of semaphores helps prevents race conditions and busy waiting."
+        }
+    },
+    "q3": {
+        "type": "blank",
+        "question": "\n<p>Suppose two students are meeting each other at the DPAC to see a movie:</p>\n\n<p>\n<ul>\n\n<li>If student A arrives first, then they should wait until student B arrives.</li>\n\n<li>If student B arrives first, then they should wait until student A arrives.</li>\n\n<li>Once they are both present, they enter the movie theater together.</li>\n</ul>\n</p>\n\n<p>Model this <b>synchronization problem</b> using POSIX <b>threads</b> and\n<b>semaphores</b>.  Assume each person is represented as a thread that\ncalls one of the corresponding functions below (<tt>student_A()</tt> for\nthe first student and <tt>student_B()</tt> for the second student).</p>\n\n<p>Assuming the following global variables:</p>\n\n<pre>\nSemaphore StudentA = ____   # 1. Initial Student A semaphore value \nSemaphore StudentB = ____   # 2. Initial Student B semaphore value\n</pre>\n\n<p>Select and order the following lines of code to implement each of the\nfunctions below:</p>\n\n<pre>\nA. sem_wait(StudentA)\nB. sem_post(StudentA)\nC. sem_wait(StudentB)\nD. sem_post(StudentB)\nE. StudentA++\nF. StudentB++\nG. enter_dpac()   # Student goes into DPAC\n</pre>\n\n<p>3. Select and order the lines of code above to implement the\n<tt>student_A()</tt> function. ____</p>\n\n<p>4. Select and order the lines of code above to implement the\n<tt>student_B()</tt> function. ____</p>\n"
+    },
+    "q4": {
+        "type": "blank",
+        "question": "\n<p>Suppose a group of <tt>NUM_STUDENTS</tt> students are meeting each other at the\nDPAC to see a movie:</p>\n\n<p>\n<ul>\n\n<li>If a student arrives first, then they should wait until all the other\nstudents arrive.</li>\n\n<li>Once they are all present, they enter the movie theater together.</li>\n</ul>\n</p>\n\n<p>Model this <b>synchronization problem</b> using POSIX <b>threads</b>,\n<b>mutexes</b>, and <b>condition variables</b>.  Assume each person is\nrepresented as a thread that calls the corresponding <tt>student()</tt>\nfunction below.</p>\n\n<p>Assuming the following global variables:</p>\n\n<pre>\nsize_t NUM_STUDENTS = 10   # Number of students going to movies\nsize_t Arrived      = 0    # Number of students who have arrived at theater\n\nMutex Lock\nCond  Waiting\n</pre>\n\n<p>Select and order the following lines of code to implement each of the\nfunctions below:</p>\n\n<pre>\nA. mutex_lock(Lock)\nB. mutex_unlock(Lock)\nC. cond_wait(Waiting, Lock)\nD. cond_signal(Waiting)\nE. while (Arrived < NUM_FRIENDS)\nF. while (Arrived > 0)\nG. if (Arrived < NUM_FRIENDS)\nH. if (Arrived > 0)\nI. Arrived++\nJ. Arrived--\nK. enter_dpac()   # Student goes into DPAC\n</pre>\n\n<p>1. Select and order the lines of code above to implement the\n<tt>student()</tt> function. ____</p>\n"
+    }
+}

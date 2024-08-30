@@ -116,7 +116,7 @@ body:       |
 
     - Your program must use [stat] to get the size of any files.
 
-    - Your program must use the `SHA1()` function provided by [OpenSSL].
+    - Your program must use the [SHA1()] function provided by [OpenSSL].
 
     - Your program must not have any resource leaks or memory errors as
       detected by [valgrind].
@@ -124,8 +124,9 @@ body:       |
     ### Hints
 
     To help you get started, the instructor suggests you review the suggestions
-    from [Generate SHA hash in C++ using OpenSSL library](https://stackoverflow.com/a/919375) [StackOverflow]
-    post and this **FAQ** slide from a previous section of [CSE 20289 Systems Programming]:
+    from [Generate SHA hash in C++ using OpenSSL
+    library](https://stackoverflow.com/a/919375) [StackOverflow] post and this
+    **FAQ** slide.
 
     <div class="thumbnail">
       <img src="static/img/reading02-sha1sum.png" class="img-responsive">
@@ -275,6 +276,7 @@ body:       |
     [malloc]: https://man7.org/linux/man-pages/man3/malloc.3.html
     [close]: https://www.man7.org/linux/man-pages/man2/close.2.html
     [SHA1]: https://en.wikipedia.org/wiki/SHA-1
+    [SHA1()]: https://docs.openssl.org/3.0/man3/SHA256_Init/
     [processes]: https://en.wikipedia.org/wiki/Process_(computing)
     [time sharing]: https://en.wikipedia.org/wiki/Time-sharing
     [multitasking]: https://en.wikipedia.org/wiki/Computer_multitasking

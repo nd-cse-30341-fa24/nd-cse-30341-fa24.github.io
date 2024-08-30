@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Project 02: Simple Message Queue</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="static/css/blugold.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<style>
+	body {
+	    padding: 10px;
+	}
+	</style>
+    </head>
+    <body>
+	<div class="container">
+
+	    <div class="row">
+		<div class="page-header">
+		    <ul class="nav nav-pills pull-right">
+			
+		    </ul>
+		    <h1><i class="fa fa-book"></i> Project 02: Simple Message Queue</h1>
+		</div>
+	    </div>
+
+            
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>The second project is to build a <a href="https://en.wikipedia.org/wiki/Message_queue">message queue</a> client that interacts with a
+rudimentary <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> system using <a href="https://en.wikipedia.org/wiki/POSIX_Threads">POSIX threads</a> and <a href="https://en.wikipedia.org/wiki/Network_socket">network sockets</a> via
+a <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> API.  In a <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> system there is usually one server and multiple
+clients:</p>
+<div class="thumbnail text-center">
+<img src="static/img/project02-pubsub.png" class="img-responsive">
+</div>
+
+<p>As shown above, a typical <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> system has a server that maintains a
+collection of <strong>topics</strong>, which serve as endpoints for messages, and
+<strong>queues</strong>, which store the messages corresponding to individual clients or
+groups. Clients in the <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> system connect to this server and perform
+the following operations:</p>
+<blockquote>
+<p><strong>(1)</strong> <code>SUBSCRIBE</code>: This associates a <strong>queue</strong> to a particular
+<strong>topic</strong>.</p>
+</blockquote>
+<p>In the example above, <strong>Client A</strong> sends an <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> <code>PUT</code> command to
+<strong>subscribe</strong> the "Spidey" <strong>queue</strong> to the "Marvel" <strong>topic</strong>.  This means
+that any <strong>messages</strong> sent to the "Marvel" <strong>topic</strong> will be automatically
+forwarded to the "Spidey" queue.</p>
+<p>Note, clients can <strong>subscribe</strong> to as many <strong>topics</strong> as they wish.
+However, they will only receive messages after they have <strong>subscribed</strong>
+(any messages sent to the <strong>topic</strong> before they <strong>subscribe</strong>) will not be
+accessible.</p>
+<blockquote>
+<p><strong>(2)</strong> <code>PUBLISH</code>: This posts a <strong>message</strong> to a particular <strong>topic</strong>.</p>
+</blockquote>
+<p>In the example above, <strong>Client B</strong> sends a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> <code>PUT</code> command to
+<strong>publish</strong> a <strong>message</strong> to the "Marvel" <strong>topic</strong> with the message
+<strong>body</strong>: "With great power, comes great responsibility".  Internally, the
+<a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server will see that "Spidey" is <strong>subscribed</strong> to the the
+"Marvel" <strong>topic</strong>, and thus it will forward the <strong>message</strong> to the
+"Spidey" <strong>queue</strong>.</p>
+<blockquote>
+<p><strong>(3)</strong> <code>RETRIEVE</code>: This fetches one <strong>message</strong> in the <strong>queue</strong>.</p>
+</blockquote>
+<p>In the example above, <strong>Client A</strong> sends a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> <code>GET</code> command to
+<strong>retrieve</strong> a <strong>message</strong> from the "Spidey" <strong>queue</strong>.  Internally, the
+<a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server will fetch one message from the "Spidey" <strong>queue</strong> and
+return it as the response to the <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> request.</p>
+<p>Note, when clients <strong>retrieve</strong> a <strong>message</strong> but the corresponding
+<strong>queue</strong> is empty, then the <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server will delay responding to the
+request until there is something in the <strong>queue</strong>.  This means that
+performing a <strong>retrieve</strong> operation is a <strong>blocking</strong> action for the
+client.</p>
+<p>Working in groups of <strong>one</strong> or <strong>two</strong> people, you are to create a
+<strong>library</strong> that utilizes <a href="https://en.wikipedia.org/wiki/POSIX_Threads">POSIX threads</a> and <a href="https://en.wikipedia.org/wiki/Concurrent_data_structure">concurrent data structures</a>
+to implement a <strong>client library</strong> for the described <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> system.
+Additionally, you are to utilize this library to a simple <strong>chat
+application</strong>.  Both the <strong>client library</strong> and the <strong>chat application</strong>
+are due by <strong>noon</strong> on <strong>Saturday, October 7, 2023</strong>.</p>
+<p>More details about this project and your deliverables are described below.</p>
+<div class="alert alert-info">
+<h4 id="publisher-subscriber"><i class="fa fa-envelope-o"></i> Publisher / Subscriber<a class="headerlink" href="#publisher-subscriber" title="Permanent link">&para;</a></h4>
+<p>As mentioned in class, <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> systems are used on many real-world
+platforms such as <a href="https://cloud.google.com/pubsub/docs/overview">Google Cloud</a> and <a href="https://aws.amazon.com/pub-sub-messaging/">Amazon Web Services</a>.  These systems
+allow developers to construct distributed and parallel applications that
+operate concurrently by utilizing both <a href="https://en.wikipedia.org/wiki/Message_passing">message passing</a> and <a href="https://en.wikipedia.org/wiki/Event-driven_programming">event-driven</a>
+programming paradigms.</p>
+</div>
+<h3 id="protocol">Protocol<a class="headerlink" href="#protocol" title="Permanent link">&para;</a></h3>
+<p>The communication between the client and server utilizes <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> to perform
+<a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> operations:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<th>Operation</th>
+<th>Description</th>
+<th>Request/Response</th>
+</thead>
+<tbody>
+<tr>
+<td class="text-strong">Subscribe</td>
+<td>This associates a <code>$QUEUE</code> to a particular <code>$TOPIC</code>.</td>
+<td>
+<h5 id="request">Request<a class="headerlink" href="#request" title="Permanent link">&para;</a></h5>
+<pre>
+PUT /subscription/$QUEUE/$TOPIC</pre>
+<h5 id="response">Response<a class="headerlink" href="#response" title="Permanent link">&para;</a></h5>
+<p>If <code>$QUEUE</code> does not exist, then the server will respond with a
+<code>404</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code and the message:</p>
+<pre>
+There is no queue named: $QUEUE</pre>
+<p>Otherwise, the server will respond with a <code>200</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code
+and the message:</p>
+<pre>
+Subscribed queue ($QUEUE) to topic ($TOPIC)</pre>
+</td>
+</tr>
+<tr>
+<td class="text-strong">Unsubscribe</td>
+<td>This disassociates a <code>$QUEUE</code> to a particular <code>$TOPIC</code>.</td>
+<td>
+<h5 id="request_1">Request<a class="headerlink" href="#request_1" title="Permanent link">&para;</a></h5>
+<pre>
+DELETE /subscription/$QUEUE/$TOPIC</pre>
+<h5 id="response_1">Response<a class="headerlink" href="#response_1" title="Permanent link">&para;</a></h5>
+<p>If <code>$QUEUE</code> does not exist, then the server will respond with a
+<code>404</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code and the message:</p>
+<pre>
+There is no queue named: $QUEUE</pre>
+<p>Otherwise, the server will respond with a <code>200</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code
+and the message:</p>
+<pre>
+Unsubscribed queue ($QUEUE) from topic ($TOPIC)</pre>
+</td>
+</tr>
+<tr>
+<td class="text-strong">Publish</td>
+<td>This posts a <strong>message</strong> <code>$BODY</code> to a particular <code>$TOPIC</code>.</td>
+<td>
+<h5 id="request_2">Request<a class="headerlink" href="#request_2" title="Permanent link">&para;</a></h5>
+<pre>
+PUT /topic/$TOPIC
+
+$BODY</pre>
+<h5 id="response_2">Response<a class="headerlink" href="#response_2" title="Permanent link">&para;</a></h5>
+<p>If there are no subscribers to <code>$TOPIC</code>, then the server will respond with a
+<code>404</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code and the message:</p>
+<pre>
+There are no subscribers for topic: $TOPIC</pre>
+<p>Otherwise, the server will respond with a <code>200</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code
+and the message:</p>
+<pre>
+Published message ($BYTES bytes) to $SUBSCRIBERS subscribers of $TOPICS</pre>
+</td>
+</tr>
+<tr>
+<td class="text-strong">Retrieve</td>
+<td>This fetches a <strong>message</strong> <code>$BODY</code> from a particular <code>$QUEUE</code>.</td>
+<td>
+<h5 id="request_3">Request<a class="headerlink" href="#request_3" title="Permanent link">&para;</a></h5>
+<pre>
+GET /queue/$QUEUE</pre>
+<h5 id="response_3">Response<a class="headerlink" href="#response_3" title="Permanent link">&para;</a></h5>
+<p>If there is no <code>$QUEUE</code>, then the server will respond with a
+<code>404</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code and the message:</p>
+<pre>
+There is no queue named: $QUEUE</pre>
+<p>Otherwise, the server will respond with a <code>200</code> <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> status code
+and the message <code>$BODY</code>:</p>
+<pre>
+$BODY</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Some notes about this protocol:</p>
+<ul>
+<li>
+<p>Communication should be done via <em>streaming</em> <a href="https://en.wikipedia.org/wiki/Network_socket">network sockets</a>.</p>
+</li>
+<li>
+<p>Each transaction is a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> request in the form:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #19177C">$METHOD</span><span style="color: #bbbbbb"> </span><span style="color: #19177C">$URI</span><span style="color: #bbbbbb"> </span>HTTP/1.0<span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+Content-Length:<span style="color: #bbbbbb"> </span><span style="color: #19177C">$BYTES</span><span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+<span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+<span style="color: #19177C">$BODY</span>
+</code></pre></div>
+
+<p>Most of the <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> operations above only need the first line.  For
+    instance, to <strong>subscribe</strong> the "Spidey" <strong>queue</strong> to the "Marvel"
+    <strong>topic</strong>, it is sufficient that we do:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>PUT<span style="color: #bbbbbb"> </span>/subscription/Spidey/Marvel<span style="color: #bbbbbb"> </span>HTTP/1.0<span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+<span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+</code></pre></div>
+
+<p>However, to <strong>publish</strong> a message, we must send the whole <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a>
+request format:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>PUT<span style="color: #bbbbbb"> </span>/topic/Marvel<span style="color: #bbbbbb"> </span>HTTP/1.0<span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+Content-Length:<span style="color: #bbbbbb"> </span><span style="color: #666666">44</span>
+<span style="color: #AA5D1F; font-weight: bold">\r\n</span>
+With<span style="color: #bbbbbb"> </span>great<span style="color: #bbbbbb"> </span>power,<span style="color: #bbbbbb"> </span>comes<span style="color: #bbbbbb"> </span>great<span style="color: #bbbbbb"> </span>responsibility
+</code></pre></div>
+
+</li>
+<li>
+<p>As fitting with the <a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> programming paradigm, the client will need
+  to reconnect to the server for each operation.</p>
+<p>Feel free to use <a href="https://curl.haxx.se/">curl</a> or <a href="https://linux.die.net/man/1/nc">nc</a> to play around with the either the
+client or server.</p>
+</li>
+</ul>
+<div class="alert alert-success">
+<h4 id="libcurl"><i class="fa fa-code"></i> Libcurl<a class="headerlink" href="#libcurl" title="Permanent link">&para;</a></h4>
+<p>This year, rather than implementing a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> client yourself, you will be
+using <a href="https://curl.se/libcurl/">libcurl</a> to perform the <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> operations.</p>
+</div>
+<h3 id="server">Server<a class="headerlink" href="#server" title="Permanent link">&para;</a></h3>
+<p>Due to the limited time frame, a <a href="https://www.python.org/">Python</a> server is provided to you in the
+<a href="https://github.com/nd-cse-30341-fa24/project02">Project 02</a> repository:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #3D7B7B; font-style: italic"># Usage</span>
+$<span style="color: #bbbbbb"> </span>./bin/mq_server.py<span style="color: #bbbbbb"> </span>--help
+...
+
+<span style="color: #3D7B7B; font-style: italic"># Start Server on port 9123</span>
+$<span style="color: #bbbbbb"> </span>./bin/mq_server.py<span style="color: #bbbbbb"> </span>--port<span style="color: #666666">=9123</span>
+</code></pre></div>
+
+<p>If you take a look at the server source code, you will see that it uses the
+<a href="https://www.tornadoweb.org/">Tornado</a> framework, which provides event-based concurrency for overlapping
+compute and I/O.  This means that the server will handle as many clients as
+system resources allow and will continuously process requests until the
+client disconnects (implicitly or explicitly).</p>
+<h3 id="client">Client<a class="headerlink" href="#client" title="Permanent link">&para;</a></h3>
+<p>The main goal of this project is to create a client library (ie.
+<code>lib/libsmq.a</code>) that communicates to a <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server as described above.
+This library will be used by a variety of test programs and an <strong>chat
+application</strong> of your own design.</p>
+<div class="thumbnail text-center">
+<img src="static/img/project02-client.png" class="img-responsive">
+</div>
+
+<h4 id="concurrency">Concurrency<a class="headerlink" href="#concurrency" title="Permanent link">&para;</a></h4>
+<p>As shown above, the client library should utilize multiple <a href="https://en.wikipedia.org/wiki/POSIX_Threads">POSIX threads</a>
+to enable concurrent publishing and retrieving messages.  This means that
+at any one time, the library should be able to do the following things
+concurrently:</p>
+<ol>
+<li>
+<p><strong>Publishing</strong>: The library should be able to publish any messages that
+have been queued up in an <strong>outgoing</strong> queue.  That is, any <code>PUBLISH</code> or
+<code>SUBSCRIBE</code> requests should go to the <strong>outgoing</strong> queue rather than
+directly to the <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server.  It will be the job of a <strong>pusher</strong>
+thread to send the messages of the <strong>outgoing</strong> queue to the server.</p>
+</li>
+<li>
+<p><strong>Retrieving</strong>: The library should be able to retrieve any messages that
+the server has available to the client and place them into an <strong>incoming</strong>
+queue.  That is, a <strong>puller</strong> thread should continuously <strong>retrieve</strong>
+messages from the <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server and place them in the <strong>incoming</strong>
+queue.</p>
+</li>
+</ol>
+<p>Because of this, the library should have at least <code>2</code> <a href="https://en.wikipedia.org/wiki/POSIX_Threads">POSIX threads</a>.  To
+coordinate data access between these <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a>, you should utilize
+<a href="https://en.wikipedia.org/wiki/Concurrent_data_structure">concurrent data structures</a>.  This architecture will allow the client
+library to operate <strong>asynchronously</strong> and allow the user to setup their own
+<strong>event loop</strong> or to simply overlap compute and I/O in any fashion they
+want.</p>
+<div class="alert alert-success">
+<h4 id="back-to-the-queue"><i class="fa fa-bars"></i> Back to the Queue<a class="headerlink" href="#back-to-the-queue" title="Permanent link">&para;</a></h4>
+<p>Hide most of the complexity of <a href="https://en.wikipedia.org/wiki/Thread_(computing)">multi-threaded</a> programming by using
+<a href="https://en.wikipedia.org/wiki/Concurrent_data_structure">concurrent data structures</a> such as the <strong>queue</strong> we created in <a href="https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing">Lecture
+10: Condition Variables</a>.  Note, you can use any combination of <a href="https://en.wikipedia.org/wiki/Lock_(computer_science)">locks</a>,
+<a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)#Condition_variables">condition variables</a>, and <a href="https://en.wikipedia.org/wiki/Semaphore_(programming)">semaphores</a> to <strong>synchronize</strong> the <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a> in
+your client library.</p>
+</div>
+<h4 id="chat-application">Chat Application<a class="headerlink" href="#chat-application" title="Permanent link">&para;</a></h4>
+<p>Once you have implemented the client library and are confident in your
+testing, you must create a <strong>chat application</strong> that utilizes the <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a>
+system.  Here are some <strong>requirements</strong>:</p>
+<ol>
+<li>
+<p>Must support <strong>multiple</strong> users from <strong>different</strong> machines.</p>
+</li>
+<li>
+<p>Must allow for users to enter in <strong>messages</strong> that are sent to other
+users via the <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> system.</p>
+</li>
+<li>
+<p>Must support a <code>/exit</code> or <code>/quit</code> command for terminating the
+application.</p>
+</li>
+<li>
+<p>Must <strong>terminate gracefully</strong> (ie. no hanging).</p>
+</li>
+<li>
+<p>Must properly <strong>manage resources</strong> (ie. no resource leaks).</p>
+</li>
+</ol>
+<div class="alert alert-info">
+<h4 id="multiplexing-io"><i class="fa fa-code"></i> Multiplexing I/O<a class="headerlink" href="#multiplexing-io" title="Permanent link">&para;</a></h4>
+<p>To allow for reading and writing to the terminal at the same time, you
+normally would want to use the <a href="https://invisible-island.net/ncurses/announce.html">ncurses</a> library for your <strong>chat
+application</strong> to handle the text-based graphics.  However, this can be
+tricky and perhaps not worth your time investment.  If you wish to do very
+basic I/O multiplexing in the terminal, then you can use this code skeleton
+for a shell:</p>
+<blockquote>
+<p><a href="https://yld.me/raw/cJ3H.c">https://yld.me/raw/cJ3H.c</a></p>
+</blockquote>
+<p>This will allow you to receive input in a buffer and write to the terminal
+at the same time.  When text is printed to the terminal, then the current
+buffer will be saved and shown below the printed text as you would
+experience in a normal chat application.</p>
+<p>Of course, you will need to modify and adapt this code to fit the needs of
+your own <strong>chat application</strong>.</p>
+</div>
+<div class="alert alert-warning">
+<h4 id="chat-application_1"><i class="fa fa-comments"></i> Chat Application<a class="headerlink" href="#chat-application_1" title="Permanent link">&para;</a></h4>
+<p>The exact nature of the messages exchanged between the clients is up to
+you.  However, the <strong>chat application</strong> must utilize your <strong>client
+library</strong> and must <strong>utilize multiple <a href="https://en.wikipedia.org/wiki/Thread_(computing)">threads</a></strong> correctly.</p>
+</div>
+<h2 id="deliverables">Deliverables<a class="headerlink" href="#deliverables" title="Permanent link">&para;</a></h2>
+<p>As noted above, you are to work <strong>individually</strong> or in <strong>pairs</strong> to
+implement <code>libsmq.a</code>.  You must use <a href="https://en.wikipedia.org/wiki/C99">C99</a> (not <a href="https://isocpp.org/">C++</a>) as the implementation
+language.  Any test scripts or auxillary tools can be written in any
+reasonable scripting language.</p>
+<h3 id="timeline">Timeline<a class="headerlink" href="#timeline" title="Permanent link">&para;</a></h3>
+<p>Here is a timeline of events related to this project:</p>
+<table class="table table-striped table-bordered">
+<thead>
+    <th>Date</th>
+    <th>Event</th>
+  </thead>
+<tbody>
+    <tr>
+      <td class="text-strong">Sunday, September 22</td>
+      <td>Project description and repository are available.</td>
+    </tr>
+    <tr>
+      <td class="text-strong">Sunday, October 6</td>
+      <td>Brainstorming should be completed.</td>
+    </tr>
+    <tr>
+      <td class="text-strong">Monday, October 14</td>
+      <td>Client library and chat application must be completed.</td>
+    </tr>
+  </tbody>
+</table>
+<div class="alert alert-success">
+<h4 id="group-project"><i class="fa fa-github"></i> Group Project<a class="headerlink" href="#group-project" title="Permanent link">&para;</a></h4>
+<p>For the final submission, please open a <strong>Pull Request</strong> on your repository
+(for your <code>project02</code> branch to the <code>master</code> branch) and assign it to the
+<strong>instructor</strong>.</p>
+</div>
+<h3 id="repository">Repository<a class="headerlink" href="#repository" title="Permanent link">&para;</a></h3>
+<p>To start this project, you must create a <a href="https://github.com/nd-cse-30341-fa24/project02">Project 02</a> repository on
+<a href="https://github.com">GitHub</a> using the following template:</p>
+<blockquote>
+<p><a href="https://classroom.github.com/a/pf1jGe7X">https://classroom.github.com/a/pf1jGe7X</a></p>
+</blockquote>
+<div class="alert alert-warning">
+<p><strong>Note</strong>: Do your work in a separate <a href="https://git-scm.com/">git</a> branch that can be later merged
+into the <code>master</code> branch (ie. make a <code>project02</code> branch, <strong>DO NOT COMMIT
+OR MERGE TO MASTER</strong>).</p>
+</div>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://github.com/nd-cse-30341-fa24/project02">Project 02</a> repository includes a <code>README.md</code> file with the following
+sections:</p>
+<ol>
+<li>
+<p><strong>Students</strong>: This should be the names and email addresses of each group
+member.</p>
+</li>
+<li>
+<p><strong>Video</strong>: This should have the link to your <strong>reflection video</strong>
+  (described below).</p>
+</li>
+<li>
+<p><strong>Brainstorming</strong>: This contains questions that should help you design
+and plan your approach to the project. <strong>You do not need to fill these out,
+but they are meant to be helpful</strong>.</p>
+</li>
+<li>
+<p><strong>Errata</strong>: This should contain a description of any known errors or
+deficiencies in your implementation.</p>
+</li>
+<li>
+<p><strong>Acknowledgments</strong>: This should list anyone you collaborated with or
+  received help from (including TAs, students, and AI tools).</p>
+</li>
+</ol>
+<p>You must complete this document report as part of your project.</p>
+<h3 id="source-code">Source Code<a class="headerlink" href="#source-code" title="Permanent link">&para;</a></h3>
+<p>As you can see, the base <a href="https://github.com/nd-cse-30341-fa24/project02">Project 02</a> repository contains a <code>README.md</code>
+file and the following folder hierarchy:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>project02
+<span style="color: #bbbbbb">    </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>Makefile<span style="color: #bbbbbb">        </span><span style="color: #3D7B7B; font-style: italic"># This is the project Makefile</span>
+<span style="color: #bbbbbb">    </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>bin<span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># This contains the executables and test scripts</span>
+<span style="color: #bbbbbb">    </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>include
+<span style="color: #bbbbbb">        </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>smq<span style="color: #bbbbbb">         </span><span style="color: #3D7B7B; font-style: italic"># This contains the smq client header files</span>
+<span style="color: #bbbbbb">    </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>lib<span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># This contains the smq client library</span>
+<span style="color: #bbbbbb">    </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>src<span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># This contains the smq client source code</span>
+<span style="color: #bbbbbb">    </span><span style="color: #AA5D1F; font-weight: bold">\_</span><span style="color: #bbbbbb">  </span>tests<span style="color: #bbbbbb">           </span><span style="color: #3D7B7B; font-style: italic"># This contains the test source code</span>
+</code></pre></div>
+
+<p>You must maintain this folder structure for your project and place files in
+their appropriate place.</p>
+<div class="alert alert-warning">
+<h4 id="kiss"><i class="fa fa-code"></i> K.I.S.S.<a class="headerlink" href="#kiss" title="Permanent link">&para;</a></h4>
+<p>While the exact organization of the project code is up to you, keep in mind
+that you will be graded in part on <strong>coding style</strong>, <strong>cleaniness</strong>, and
+<strong>organization</strong>.  This means your code should be consistently formatted,
+not contain any dead code, have reasonable comments, and appropriate naming
+among other things:</p>
+<ul>
+<li>
+<p>Break long functions into smaller functions.</p>
+</li>
+<li>
+<p>Make sure each function does one thing and does it well.</p>
+</li>
+<li>
+<p>Abstract, but don't over do it.</p>
+</li>
+</ul>
+<p>Please refer to these <a href="https://www3.nd.edu/~pbui/teaching/cse.30341.fa24/static/img/coding-style.png">Coding Style</a> slides for some tips and guidelines on
+coding style expectations.</p>
+</div>
+<h4 id="compiling">Compiling<a class="headerlink" href="#compiling" title="Permanent link">&para;</a></h4>
+<p>To help you get started, we have provided you with a <code>Makefile</code> with all
+the necessary targets:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>make<span style="color: #bbbbbb">                  </span><span style="color: #3D7B7B; font-style: italic"># Builds lib/libsmq.a</span>
+Compiling<span style="color: #bbbbbb"> </span>src/client.o
+Compiling<span style="color: #bbbbbb"> </span>src/queue.o
+Compiling<span style="color: #bbbbbb"> </span>src/request.o
+Linking<span style="color: #bbbbbb">   </span>lib/libsmq.a
+
+$<span style="color: #bbbbbb"> </span>make<span style="color: #bbbbbb"> </span><span style="color: #008000">test</span><span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># Builds and runs test programs</span>
+Compiling<span style="color: #bbbbbb"> </span>tests/test_client.o
+Linking<span style="color: #bbbbbb">   </span>bin/test_client
+Compiling<span style="color: #bbbbbb"> </span>tests/test_queue.o
+Linking<span style="color: #bbbbbb">   </span>bin/test_queue
+Compiling<span style="color: #bbbbbb"> </span>tests/unit_queue.o
+Linking<span style="color: #bbbbbb">   </span>bin/unit_queue
+Compiling<span style="color: #bbbbbb"> </span>tests/unit_request.o
+Linking<span style="color: #bbbbbb">   </span>bin/unit_request
+Testing<span style="color: #bbbbbb"> </span>unit_queue<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>queue_create<span style="color: #bbbbbb">                                                 </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_push<span style="color: #bbbbbb">                                                   </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_pop<span style="color: #bbbbbb">                                                    </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_delete<span style="color: #bbbbbb">                                                 </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_shutdown<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+
+Testing<span style="color: #bbbbbb"> </span>unit_request<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>request_create<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_delete<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_perform_<span style="color: #666666">(</span>get<span style="color: #666666">)</span><span style="color: #bbbbbb">                                        </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_perform_<span style="color: #666666">(</span>put<span style="color: #666666">)</span><span style="color: #bbbbbb">                                        </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_perform_<span style="color: #666666">(</span>delete<span style="color: #666666">)</span><span style="color: #bbbbbb">                                     </span>...<span style="color: #bbbbbb"> </span>Success
+
+Testing<span style="color: #bbbbbb"> </span>test_client<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>port:<span style="color: #bbbbbb"> </span><span style="color: #666666">9000</span><span style="color: #bbbbbb">                                                   </span>...<span style="color: #bbbbbb"> </span>Success
+
+Testing<span style="color: #bbbbbb"> </span>test_queue<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>producers:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span>,<span style="color: #bbbbbb"> </span>consumers:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span>,<span style="color: #bbbbbb"> </span>messages:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span><span style="color: #bbbbbb">             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>producers:<span style="color: #bbbbbb">    </span><span style="color: #666666">2</span>,<span style="color: #bbbbbb"> </span>consumers:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span>,<span style="color: #bbbbbb"> </span>messages:<span style="color: #bbbbbb">  </span><span style="color: #666666">128</span><span style="color: #bbbbbb">             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>producers:<span style="color: #bbbbbb">    </span><span style="color: #666666">4</span>,<span style="color: #bbbbbb"> </span>consumers:<span style="color: #bbbbbb">    </span><span style="color: #666666">2</span>,<span style="color: #bbbbbb"> </span>messages:<span style="color: #bbbbbb"> </span><span style="color: #666666">1024</span><span style="color: #bbbbbb">             </span>...<span style="color: #bbbbbb"> </span>Success
+
+$<span style="color: #bbbbbb"> </span>make<span style="color: #bbbbbb"> </span>clean<span style="color: #bbbbbb">            </span><span style="color: #3D7B7B; font-style: italic"># Removes all targets and intermediate objects</span>
+Removing<span style="color: #bbbbbb"> </span>objects
+Removing<span style="color: #bbbbbb"> </span>libraries
+Removing<span style="color: #bbbbbb"> </span><span style="color: #008000">test</span><span style="color: #bbbbbb"> </span>programs
+</code></pre></div>
+
+<div class="alert alert-warning">
+<p><strong>Note</strong>, you will need to modify this <code>Makefile</code> to build your <strong>chat
+application</strong>.</p>
+</div>
+<h4 id="running">Running<a class="headerlink" href="#running" title="Permanent link">&para;</a></h4>
+<p>As noted above, you are provided with a <a href="https://www.python.org/">Python</a> implementation of the
+<a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">pub/sub</a> server.  To run it, you just specify the port you want to use (by
+default it is <code>9620</code>):</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>./bin/mq_server.py<span style="color: #bbbbbb"> </span>--port<span style="color: #666666">=9456</span><span style="color: #bbbbbb">        </span><span style="color: #3D7B7B; font-style: italic"># Start server on port 9456</span>
+</code></pre></div>
+
+<p>Since you are only writing the <strong>client library</strong>, we have provided a
+simple test client application that uses your library called <code>test_client</code>.
+Once the server is up and running, you can use the test program by doing
+the following:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>./bin/test_client<span style="color: #bbbbbb"> </span>localhost<span style="color: #bbbbbb"> </span><span style="color: #666666">9456</span><span style="color: #bbbbbb">      </span><span style="color: #3D7B7B; font-style: italic"># Contact localhost on port 9456</span>
+</code></pre></div>
+
+<h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h4>
+<p>All of the <a href="https://en.wikipedia.org/wiki/C99">C99</a> header files are in the <code>include/mq</code> folder while the
+<a href="https://en.wikipedia.org/wiki/C99">C99</a> source code for the client librar is in the <code>src/client</code> directory.
+To help you get started, parts of the project are already implemented:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #666666">[</span>~<span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>include/mq/client.h<span style="color: #bbbbbb">     </span><span style="color: #3D7B7B; font-style: italic"># MQ client header (mostly implemented)</span>
+<span style="color: #666666">[</span>~<span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>include/mq/queue.h<span style="color: #bbbbbb">      </span><span style="color: #3D7B7B; font-style: italic"># MQ queue header (mostly implemented)</span>
+<span style="color: #666666">[</span>x<span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>include/mq/request.h<span style="color: #bbbbbb">    </span><span style="color: #3D7B7B; font-style: italic"># MQ request header (implemented)</span>
+<span style="color: #666666">[</span>x<span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>include/mq/thread.h<span style="color: #bbbbbb">     </span><span style="color: #3D7B7B; font-style: italic"># MQ thread header (implemented)</span>
+<span style="color: #666666">[</span>x<span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>include/mq/utils.h<span style="color: #bbbbbb">      </span><span style="color: #3D7B7B; font-style: italic"># MQ utilities header (implemented)</span>
+<span style="color: #666666">[</span><span style="color: #bbbbbb"> </span><span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>src/client.c<span style="color: #bbbbbb">            </span><span style="color: #3D7B7B; font-style: italic"># MQ client implementation (not implemented)</span>
+<span style="color: #666666">[</span><span style="color: #bbbbbb"> </span><span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>src/queue.c<span style="color: #bbbbbb">             </span><span style="color: #3D7B7B; font-style: italic"># MQ queue implementation (not implemented)</span>
+<span style="color: #666666">[</span><span style="color: #bbbbbb"> </span><span style="color: #666666">]</span><span style="color: #bbbbbb"> </span>src/request.c<span style="color: #bbbbbb">           </span><span style="color: #3D7B7B; font-style: italic"># MQ request implementation (not implemented)</span>
+</code></pre></div>
+
+<p>Basically, a starting code skeleton is provided to you along with some
+utilities, but you must implement the <strong>client</strong>, <strong>queue</strong>, and
+<strong>request</strong> structures and functionality.  Each of the functions in the
+incomplete files above have comments that describe what needs to be done.</p>
+<p>You will need to examine these source files and complete the implementation
+of the <strong>message queue</strong> client library. To do so, you will first need to
+implement a basic concurrent <code>Queue</code> structure and utilize it in your <code>SMQ</code>
+client structure:</p>
+<ol>
+<li>
+<p><code>include/mq/client.h</code>, <code>include/mq/queue.h</code>: While most of the headers
+  are complete, these two are considered only mostly implemented because
+  they lack any [mutexes], <a href="https://en.wikipedia.org/wiki/Monitor_(synchronization)#Condition_variables">condition variables</a>, or <a href="https://en.wikipedia.org/wiki/Semaphore_(programming)">semaphores</a>.  That
+  is, they do not currently utilize any synchronization primitives.  You
+  will need to determine which ones you wish to use and how.</p>
+<p>To help simplify your code a bit, we have provided
+  <code>include/mq/thread.h</code> which contains macros and type definitions that
+  can help simplify your <a href="https://en.wikipedia.org/wiki/POSIX_Threads">POSIX threads</a> code.  Feel free to either use
+  these or ignore them.</p>
+</li>
+<li>
+<p><code>src/request.c</code>: This file contains the implementation of a <code>Request</code>
+structure which records the basic components of a <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> request:</p>
+<p>a. <code>method</code>: This is the <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> method to perform (ie. <code>GET</code>, <code>PUT</code>,
+  <code>DELETE</code>).</p>
+<p>b. <code>url</code>: This is the resource to access (ie. <code>/topic/$TOPIC</code> or
+  <code>/queue/$QUEUE</code>)</p>
+<p>c. <code>body</code>: This is the body of the <a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP</a> message.</p>
+</li>
+<li>
+<p><code>src/queue.c</code>: This file contains the implementation of a
+concurrent <code>Queue</code> structure which implements a basic [monitor] for
+synchronized access to the <code>Queue</code> via <code>push</code> and <code>pop</code> operations.  You
+will need to think carefully on how and when to use your synchronization
+primitives.</p>
+</li>
+<li>
+<p><code>src/client.c</code>: This file contains the implementation of the
+<code>SMQ</code> client structure which is the object the user will interface
+with.  This is where you will define functions that wrap and implement the
+<a href="https://en.wikipedia.org/wiki/Representational_state_transfer">RESTful</a> API described above.  Likewise, this is where you will need to
+implement the <a href="https://en.wikipedia.org/wiki/POSIX_Threads">POSIX threads</a> that run in the background (ie. <strong>pusher</strong>
+and <strong>puller</strong>).</p>
+</li>
+</ol>
+<h4 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h4>
+<p>To test the client library, we have provided a variety of tests:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>make<span style="color: #bbbbbb"> </span><span style="color: #008000">test</span>
+Testing<span style="color: #bbbbbb"> </span>unit_queue<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>queue_create<span style="color: #bbbbbb">                                                 </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_push<span style="color: #bbbbbb">                                                   </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_pop<span style="color: #bbbbbb">                                                    </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_delete<span style="color: #bbbbbb">                                                 </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>queue_shutdown<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+
+Testing<span style="color: #bbbbbb"> </span>unit_request<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>request_create<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_delete<span style="color: #bbbbbb">                                               </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_perform_<span style="color: #666666">(</span>get<span style="color: #666666">)</span><span style="color: #bbbbbb">                                        </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_perform_<span style="color: #666666">(</span>put<span style="color: #666666">)</span><span style="color: #bbbbbb">                                        </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>request_perform_<span style="color: #666666">(</span>delete<span style="color: #666666">)</span><span style="color: #bbbbbb">                                     </span>...<span style="color: #bbbbbb"> </span>Success
+
+Testing<span style="color: #bbbbbb"> </span>test_client<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>port:<span style="color: #bbbbbb"> </span><span style="color: #666666">9000</span><span style="color: #bbbbbb">                                                   </span>...<span style="color: #bbbbbb"> </span>Success
+
+Testing<span style="color: #bbbbbb"> </span>test_queue<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb"> </span>producers:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span>,<span style="color: #bbbbbb"> </span>consumers:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span>,<span style="color: #bbbbbb"> </span>messages:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span><span style="color: #bbbbbb">             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>producers:<span style="color: #bbbbbb">    </span><span style="color: #666666">2</span>,<span style="color: #bbbbbb"> </span>consumers:<span style="color: #bbbbbb">    </span><span style="color: #666666">1</span>,<span style="color: #bbbbbb"> </span>messages:<span style="color: #bbbbbb">  </span><span style="color: #666666">128</span><span style="color: #bbbbbb">             </span>...<span style="color: #bbbbbb"> </span>Success
+<span style="color: #bbbbbb"> </span>producers:<span style="color: #bbbbbb">    </span><span style="color: #666666">4</span>,<span style="color: #bbbbbb"> </span>consumers:<span style="color: #bbbbbb">    </span><span style="color: #666666">2</span>,<span style="color: #bbbbbb"> </span>messages:<span style="color: #bbbbbb"> </span><span style="color: #666666">1024</span><span style="color: #bbbbbb">             </span>...<span style="color: #bbbbbb"> </span>Success
+</code></pre></div>
+
+<p>The <code>bin/unit_request</code> is a <a href="https://en.wikipedia.org/wiki/Unit_testing">unit test</a> for the <code>Request</code> structure you
+will be utilizing.  Similarly, the <code>bin/unit_queue</code> is a <a href="https://en.wikipedia.org/wiki/Unit_testing">unit test</a> for
+the concurrent queue you will be implementing.  It also comes with a
+functional test (i.e.  <code>bin/test_queue</code>) that tests the queue with multiple
+threads.  Finally, we include a basic echo client test (ie.
+<code>bin/test_client</code>) that will use your message queue library to perform
+basic operations.</p>
+<div class="alert alert-info">
+<p>Feel free to create <strong>additional tests</strong> to verify the correctness of your
+library.</p>
+</div>
+<h2 id="reflection">Reflection<a class="headerlink" href="#reflection" title="Permanent link">&para;</a></h2>
+<p>To reflect on the project and the concepts involved, you will need to
+create a <strong>group video demonstration</strong> of your software artifact and
+complete an <strong>individual quiz</strong> (<em>each member will submit their own answers
+to their own private assignments repository</em>).</p>
+<h3 id="video-demonstration">Video Demonstration<a class="headerlink" href="#video-demonstration" title="Permanent link">&para;</a></h3>
+<p>As part of your grade, your group will need to create a video that
+demonstrates and discusses the following:</p>
+<ol>
+<li>
+<p>Your <strong>library</strong> passing the automated tests.</p>
+</li>
+<li>
+<p>Your <strong>chat application</strong> working with multiple clients.</p>
+</li>
+<li>
+<p>Any <strong>errata, quirks, or unresolved issues</strong> in your project.</p>
+</li>
+<li>
+<p>What you <strong>learned</strong> by doing this project.</p>
+</li>
+</ol>
+<p>The video should include narration to describe what is being presented and
+should cover the requirements enumerated above. It should be no longer than
+<code>5</code> minutes.</p>
+<p>Please upload the video to either <a href="https://youtube.com">YouTube</a> or <a href="https://drive.google.com">Google Drive</a> and provide a
+link to it in your <code>README.md</code>.</p>
+<h3 id="individual-quiz">Individual Quiz<a class="headerlink" href="#individual-quiz" title="Permanent link">&para;</a></h3>
+<p>Once you have completed the project, answer the following <a href="static/json/project02.json">Project 02 Quiz</a>
+questions <strong>individually</strong> in your own personal <code>assignments</code> repository on <a href="https://github.com">GitHub</a>:</p>
+<div id="quiz-questions"></div>
+
+<div id="quiz-responses"></div>
+
+<script src="static/js/dredd-quiz.js"></script>
+<script>
+loadQuiz('static/json/project02.json');
+</script>
+
+<pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+<p>The results of the quiz should look like the following:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>Checking project02 quiz ...
+      Q1 0.50
+      Q2 0.50
+      Q3 1.00
+      Q4 1.00
+   Score 3.00 / 3.00
+  Status Success
+</code></pre></div>
+
+<div class="alert alert-success">
+<h4 id="individual-quiz_1"><i class="fa fa-git"></i> Individual Quiz<a class="headerlink" href="#individual-quiz_1" title="Permanent link">&para;</a></h4>
+<p>Each group member must do the quiz on their own and record their answers in
+the <code>project02</code> folder in their <strong>assignments</strong> <a href="https://github.com">GitHub</a> repository.</p>
+<p>Once you have committed your work and pushed it to <a href="https://github.com">GitHub</a>, remember to
+create a <strong>pull request</strong> and assign it to the appropriate <strong>teaching
+assistant</strong> from the <a href="reading06_tas.html">Reading 06 TA List</a>.</p>
+</div>
+<h2 id="grading">Grading<a class="headerlink" href="#grading" title="Permanent link">&para;</a></h2>
+<p>Your project will be graded on the following metrics:</p>
+<table class="table table-striped table-bordered">
+<thead>
+    <th>Metric</th>
+    <th>Points</th>
+  </thead>
+<tbody>
+    <tr>
+      <td>
+        <strong>Source Code</strong>
+        <ol>
+          <li><b>General</b>
+            <ul>
+              <li>Builds and cleans without warnings or errors</li>
+              <li>Manages resources such as memory and files appropriately</li>
+              <li>Is consistent, readable, and organized</li>
+              <li>Has regular commits and submitted on-time.</li>
+            </ul>
+          </li>
+          <br>
+          <li><b>Request</b>
+          <ul>
+              <li>Implements <tt>request_create</tt> appropriately</li>
+              <li>Implements <tt>request_delete</tt> appropriately</li>
+              <li>Implements <tt>request_perform</tt> appropriately</li>
+          </ul>
+          </li>
+          <br>
+          <li><b>Queue</b>
+          <ul>
+              <li>Implements <tt>queue_create</tt> appropriately</li>
+              <li>Implements <tt>queue_delete</tt> appropriately</li>
+              <li>Implements <tt>queue_shutdown</tt> appropriately</li>
+              <li>Implements <tt>queue_push</tt> appropriately</li>
+              <li>Implements <tt>queue_pop</tt> appropriately</li>
+          </ul>
+          </li>
+          <br>
+          <li><b>Client</b>
+            <ul>
+              <li>Performs <tt>SUBSCRIBE</tt> properly</li>
+              <li>Performs <tt>UNSUBSCRIBE</tt> properly</li>
+              <li>Performs <tt>PUBLISH</tt> properly</li>
+              <li>Performs <tt>RETRIEVE</tt> properly</li>
+              <li>Manages multiple threads properly (including shutdown)</li>
+              <li>Utilizes concurrent data structures properly</li>
+              <li>Free of concurrency bugs (race conditions, deadlocks, etc.)</li>
+            </ul>
+          </li>
+          <br>
+          <li><b>Chat Application</b>
+            <ul>
+              <li>Supports multiple users from different machines</li>
+              <li>Utilizes multiple threads properly</li>
+              <li>Utilizes client library for communication properly</li>
+              <li>Free of concurrency bugs (race conditions, deadlocks, etc.)</li>
+              <li>Terminates gracefully</li>
+            </ul>
+          </li>
+        </ol>
+      </td>
+      <td>
+        <strong>10.0</strong>
+        <ol class="list-unstyled">
+          <li><b><i>1.00</i></b>
+            <ul class="list-unstyled">
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+            </ul>
+          </li>
+          <br>
+          <li><b><i>1.50</i></b>
+            <ul class="list-unstyled">
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>1.00</i></li>
+            </ul>
+          </li>
+          <br>
+          <li><b><i>2.50</i></b>
+            <ul class="list-unstyled">
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.75</i></li>
+              <li><i>1.00</i></li>
+            </ul>
+          </li>
+          <br>
+          <li><b><i>3.00</i></b>
+            <ul class="list-unstyled">
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.25</i></li>
+              <li><i>0.75</i></li>
+              <li><i>0.50</i></li>
+              <li><i>0.75</i></li>
+            </ul>
+          </li>
+          <br>
+          <li><b><i>2.00</i></b>
+            <ul class="list-unstyled">
+              <li><i>1.00</i></li>
+              <li><i>1.00</i></li>
+              <li><i>1.00</i></li>
+              <li><i>1.00</i></li>
+              <li><i>0.50</i></li>
+            </ul>
+          </li>
+        </ol>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <strong>Reflection</strong>
+      <ol>
+        <li><b>Group Video Demonstration</b>
+        <ul>
+          <li>Exhibits reasonable audio and video quality</li>
+          <li>Demonstrates <b>library</b> passing automated tests</li>
+          <li>Demonstrates <b>chat application</b> working with multiple clients</li>
+          <li>Discusses errata, quirks, or unresolved issues</li>
+          <li>Discusses what the group learned from the project</li>
+        </ul>
+        <br>
+        </li>
+        <li><b>Individual Quiz</b></li>
+      </ol>
+      </td>
+      <td>
+      <strong>5.00</strong>
+      <ol class="list-unstyled">
+        <li><b><i>2.00</i></b>
+        <ul class="list-unstyled">
+          <li><i>0.25</i></li>
+          <li><i>0.75</i></li>
+          <li><i>0.50</i></li>
+          <li><i>0.25</i></li>
+          <li><i>0.25</i></li>
+        </ul>
+        <br>
+        </li>
+        <li><b>3.00</b></li>
+      </ol>
+    </tr>
+  </tbody>
+</table>
+<div class="alert alert-warning">
+<h4 id="commit-history"><i class="fa fa-git"></i> Commit History<a class="headerlink" href="#commit-history" title="Permanent link">&para;</a></h4>
+<p>To encourage you to work on the project <strong>regularly</strong> (rather than leaving
+it until the last second) and to practice performing <strong>incremental
+development</strong>, part of your grade will be based on whether or not you have
+regular and reasonably sized commits in your <a href="https://git-scm.com/">git</a> log.</p>
+<p>That is, you will <strong>lose</strong> a point if you commit everything at once near
+the project deadline.</p>
+</div>
+<div class="alert alert-danger">
+<h4 id="error-handling"><i class="fa fa-warning"></i> Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h4>
+<p>In addition to meeting the functional requirements of the project (as
+described above), your program <strong>must not exhibit any memory leaks</strong> or
+<strong>invalid memory accesses</strong> as would be detected by <a href="http://valgrind.org/">Valgrind</a>.</p>
+<p>Additionally, because <a href="https://en.wikipedia.org/wiki/System_call">system calls</a> can fail, your program must implement
+<strong>robust error handling</strong> and ensure your code checks the status of <a href="https://en.wikipedia.org/wiki/System_call">system
+calls</a> when reasonable.</p>
+<p>Moreover, you code must compile <strong>without any warnings</strong> (and <code>-Wall</code> must
+be one of the <code>CFLAGS</code>).</p>
+</div>
+
+
+	    <div class="row">
+		<hr/>
+
+		<footer class="text-center">
+		    <p class="text-muted">
+		    <small>
+		    Built using
+		    <a href="https://getbootstrap.com/">Bootstrap</a>,
+		    <a href="https://fontawesome.com/">Font Awesome</a>, and
+		    <a href="http://www.python.org/">Python</a>.
+		    <br/>
+		    &copy; 2024 <a href="http://www.nd.edu">University of Notre Dame</a>
+		    </small>
+		    </p>
+		</footer>
+	    </div>
+
+	</div> <!-- /container -->
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	
+    </body>
+</html>
+

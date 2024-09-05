@@ -402,6 +402,15 @@ of the <a href="https://en.wikipedia.org/wiki/Shell_%28computing%29">shell</a>. 
 <div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>PQSHScheduler.event<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>...
 </code></pre></div>
 
+<p>To register the <a href="https://man7.org/linux/man-pages/man2/signal.2.html">signal</a> handler functions, you should use <a href="https://man7.org/linux/man-pages/man2/sigaction.2.html">sigaction</a>
+rather than <a href="https://man7.org/linux/man-pages/man2/signal.2.html">signal</a>, as the latter restarts blocking system calls
+automatically (<em>which is not the behavior we want</em>):</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #008000; font-weight: bold">struct</span><span style="color: #bbbbbb"> </span><span style="color: #0000FF; font-weight: bold">sigaction</span><span style="color: #bbbbbb"> </span>sigalrm_action<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>{.sa_handler<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>scheduler_handle_sigalrm};
+<span style="color: #008000; font-weight: bold">if</span><span style="color: #bbbbbb"> </span>(sigaction(SIGALRM,<span style="color: #bbbbbb"> </span><span style="color: #666666">&amp;</span>sigalrm_action,<span style="color: #bbbbbb"> </span><span style="color: #008000">NULL</span>)<span style="color: #bbbbbb"> </span><span style="color: #666666">&lt;</span><span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>)<span style="color: #bbbbbb"> </span>{
+<span style="color: #bbbbbb">    </span>...
+}
+</code></pre></div>
+
 </li>
 <li>
 <p><code>pqsh.c</code>: To activate a regular timer interval, you should consider using
@@ -411,7 +420,7 @@ of the <a href="https://en.wikipedia.org/wiki/Shell_%28computing%29">shell</a>. 
 <span style="color: #bbbbbb">  </span>.it_value<span style="color: #bbbbbb">    </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>{<span style="color: #bbbbbb"> </span>.tv_sec<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>,<span style="color: #bbbbbb"> </span>.tv_usec<span style="color: #bbbbbb"> </span><span style="color: #666666">=</span><span style="color: #bbbbbb"> </span>s<span style="color: #666666">-&gt;</span>timeout<span style="color: #bbbbbb"> </span>},
 };
 <span style="color: #008000; font-weight: bold">if</span><span style="color: #bbbbbb"> </span>(setitimer(ITIMER_REAL,<span style="color: #bbbbbb"> </span><span style="color: #666666">&amp;</span>interval,<span style="color: #bbbbbb"> </span><span style="color: #008000">NULL</span>)<span style="color: #bbbbbb"> </span><span style="color: #666666">&lt;</span><span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>)<span style="color: #bbbbbb"> </span>{
-<span style="color: #bbbbbb">  </span>...
+<span style="color: #bbbbbb">    </span>...
 }
 </code></pre></div>
 

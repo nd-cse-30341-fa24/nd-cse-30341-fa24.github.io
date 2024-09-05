@@ -407,6 +407,16 @@ body:       |
             :::c
             PQSHScheduler.event = ...
 
+        To register the [signal] handler functions, you should use [sigaction]
+        rather than [signal], as the latter restarts blocking system calls
+        automatically (*which is not the behavior we want*):
+
+            :::c
+            struct sigaction sigalrm_action = {.sa_handler = scheduler_handle_sigalrm};
+            if (sigaction(SIGALRM, &sigalrm_action, NULL) < 0) {
+                ...
+            }
+
     - `pqsh.c`: To activate a regular timer interval, you should consider using
       the [setitimer] system call.
 
@@ -416,7 +426,7 @@ body:       |
               .it_value    = { .tv_sec = 0, .tv_usec = s->timeout },
             };
             if (setitimer(ITIMER_REAL, &interval, NULL) < 0) {
-              ...
+                ...
             }
 
     - `pqsh.c`: To emulate an **event** based system, you should take advantage
@@ -441,6 +451,7 @@ body:       |
     [fgets]: https://man7.org/linux/man-pages/man3/fgets.3.html
     [signal]: https://man7.org/linux/man-pages/man2/signal.2.html
     [signals]: https://man7.org/linux/man-pages/man2/signal.2.html
+    [sigaction]: https://man7.org/linux/man-pages/man2/sigaction.2.html
 
     #### Testing
 

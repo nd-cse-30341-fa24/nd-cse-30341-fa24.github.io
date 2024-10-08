@@ -117,6 +117,9 @@
 
       - date:           Thu 10/03
         topics:         Structures
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f8b7509c-97cd-4bdd-904e-b1fe00fbf4b0
 
 - name:     Semaphores
   days:
@@ -127,6 +130,8 @@
         items:
           - name:       Slide 11
             link:       https://docs.google.com/presentation/d/1RdfAkMmeyt7Qdt2LD2aAobl4zqi6iGmxMDdexQNGSiY/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b601b320-c54a-45aa-87a4-b20300fb93fb
 
       - date:           Thu 10/10
         topics:         Patterns

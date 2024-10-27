@@ -250,6 +250,8 @@
   days:
       - date:           Tue 12/10
         topics:         FFS, LFS
+        assignments:
+          - Reading 12
 
       - date:           Thu 12/12
         topics:         Consistency, Integrity

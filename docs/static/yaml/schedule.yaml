@@ -226,12 +226,15 @@
 
 - name:     "Unit 04: Persistence with File Systems"
 
-- name:     Devices
+- name:     I/O Devices
   days:
       - date:           Tue 11/26
-        topics:         Devices
+        topics:         I/O Devices
         assignments:
           - Reading 10
+        items:
+          - name:       Slide 19
+            link:       https://docs.google.com/presentation/d/1mu3xWwi4rlgGkDX1hXEvdRv-6941hVgllKCjNCJUqKA/edit?usp=sharing
 
       - date:           Thu 11/28
         topics:         Thanksgiving
@@ -242,9 +245,15 @@
         topics:         RAID
         assignments:
           - Reading 11
+        items:
+          - name:       Slide 20
+            link:       https://docs.google.com/presentation/d/1THZeXXOSl1FXr7o5BO-eYiIF2wQX8UuVU4NLcV2MaUU/edit?usp=sharing
 
       - date:           Thu 12/05
         topics:         File Systems
+        items:
+          - name:       Slide 21
+            link:       https://docs.google.com/presentation/d/1xAd6VwGHWCo4LdLDRJrMCaU4Lx7TtPszwfoNTVud7pU/edit?usp=sharing
 
 - name:     Consistency, Integrity
   days:
@@ -252,11 +261,17 @@
         topics:         FFS, LFS
         assignments:
           - Reading 12
+        items:
+          - name:       Slide 22
+            link:       https://docs.google.com/presentation/d/1YAeDJ925xIiHLyKXMkV_ls0Ie0eh86Dff5BF6uFcjC0/edit?usp=sharing
 
       - date:           Thu 12/12
         topics:         Consistency, Integrity
         assignments:
           - Project 04
+        items:
+          - name:       Slide 23
+            link:       https://docs.google.com/presentation/d/1dU6vf0w26LCaWj66h1akVYW2wrDIaiHEsZyYk8K4uTg/edit?usp=sharing
 
 - name:     Exam 04
   days:

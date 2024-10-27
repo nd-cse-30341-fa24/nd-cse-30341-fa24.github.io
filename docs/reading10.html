@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Reading 10: I/O Devices, RAID</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="static/css/blugold.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+
+	<style>
+	body {
+	    padding: 10px;
+	}
+	</style>
+    </head>
+    <body>
+	<div class="container">
+
+	    <div class="row">
+		<div class="page-header">
+		    <ul class="nav nav-pills pull-right">
+			
+			<li><a href="index.html"><i class="fa fa-desktop"></i> <span class="visible-md-inline visible-lg-inline">Home</span></a></li>
+			
+		    </ul>
+		    <h1><i class="fa fa-book"></i> Reading 10: I/O Devices, RAID</h1>
+		</div>
+	    </div>
+
+            
+<p><strong>Everyone</strong>:</p>
+<p>Next week, we will explore how an OS provides <strong>persistence</strong> by managing
+<a href="https://en.wikipedia.org/wiki/Disk_storage">I/O devices</a> such as <a href="https://en.wikipedia.org/wiki/Hard_disk_drive">hard disks</a>.  Likewise, we will also consider
+aggregation strategies such as <a href="https://en.wikipedia.org/wiki/RAID">RAID</a> which provide an illusion of a large
+disk composed of multiple inexpensive disks.</p>
+<div class="alert alert-info">
+<h4 id="tldr"><i class="fa fa-search"></i> TL;DR<a class="headerlink" href="#tldr" title="Permanent link">&para;</a></h4>
+<p>For this reading assignment, you are to read about <a href="https://en.wikipedia.org/wiki/Disk_storage">I/O devices</a> and
+<a href="https://en.wikipedia.org/wiki/RAID">RAID</a>, and submit your responses to the <a href="static/json/reading10.json">Reading 10 Quiz</a>.</p>
+</div>
+<p><img src="static/img/ostep.jpg" class="pull-right"></p>
+<h2 id="reading">Reading<a class="headerlink" href="#reading" title="Permanent link">&para;</a></h2>
+<p>The readings for this week are:</p>
+<ol>
+<li>
+<p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/">Operating Systems: Three Easy Pieces</a></p>
+<ul>
+<li><p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/dialogue-persistence.pdf">Dialogue on Persistence</a></p></li>
+<li><p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/file-devices.pdf">I/O Devices</a></p></li>
+<li><p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/file-disks.pdf">Hard Disk Drives</a></p></li>
+<li><p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/file-raid.pdf">Redundant Arrays of Inexpensive Disks</a></p></li>
+<li><p><a href="http://pages.cs.wisc.edu/~remzi/OSTEP/file-ssd.pdf">Flash-based SSDs</a></p></li>
+</ul>
+</li>
+</ol>
+<h3 id="optional-reading">Optional Reading<a class="headerlink" href="#optional-reading" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://www.digitalocean.com/community/tutorials/an-introduction-to-raid-terminology-and-concepts">An Introduction to RAID Terminology and Concepts</a></p>
+</li>
+<li>
+<p><a href="https://arstechnica.com/information-technology/2020/04/understanding-raid-how-performance-scales-from-one-disk-to-eight/">Understanding RAID: How performance scales from one disk to eight</a></p>
+</li>
+</ul>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">&para;</a></h2>
+<p>Once you have done the readings, answer the following <a href="static/json/reading10.json">Reading 10 Quiz</a>
+questions:</p>
+<div id="quiz-questions"></div>
+
+<div id="quiz-responses"></div>
+
+<script src="static/js/dredd-quiz.js"></script>
+<script>
+loadQuiz('static/json/reading10.json');
+</script>
+
+<pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+<h3 id="program">Program<a class="headerlink" href="#program" title="Permanent link">&para;</a></h3>
+<p>For this week, you are to explore the filesystems on
+<strong>student10.cse.nd.edu</strong> by using <a href="https://man7.org/linux/man-pages/man1/df.1.html">df</a>, <a href="https://man7.org/linux/man-pages/man8/lsblk.8.html">lsblk</a>, <a href="https://man7.org/linux/man-pages/man8/mount.8.html">mount</a>, <a href="https://man7.org/linux/man-pages/man1/stat.1.html">stat</a>, and
+<code>/proc/mdstat</code> to answer the following questions:</p>
+<ol>
+<li>
+<p>What device is the root (ie. <code>/</code>) filesystem mounted on (ie. <code>/dev/XXX</code>)?</p>
+</li>
+<li>
+<p>What type of filesystem is <code>/boot</code> mounted on?</p>
+</li>
+<li>
+<p>What version of <a href="https://en.wikipedia.org/wiki/RAID">RAID</a> does <code>/home</code> use (ie. <code>raidX</code>)?</p>
+</li>
+<li>
+<p>How large is each <strong>swap</strong> partition (in <code>G</code> units)?</p>
+</li>
+<li>
+<p>What is the <strong>inode</strong> number of <code>/etc/hosts</code>?</p>
+</li>
+<li>
+<p>What is the file size (in bytes) of <code>/bin/ls</code>)?</p>
+</li>
+</ol>
+<p>In your <code>program.c</code>, simply use puts to print out the answers:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span style="color: #B00040">int</span><span style="color: #bbbbbb"> </span><span style="color: #0000FF">main</span>(<span style="color: #B00040">int</span><span style="color: #bbbbbb"> </span>argc,<span style="color: #bbbbbb"> </span><span style="color: #B00040">char</span><span style="color: #bbbbbb"> </span><span style="color: #666666">*</span>argv[])<span style="color: #bbbbbb"> </span>{
+<span style="color: #bbbbbb">    </span>puts(<span style="color: #BA2121">&quot;/dev/...&quot;</span>);
+<span style="color: #bbbbbb">    </span>...
+<span style="color: #bbbbbb">    </span>puts(<span style="color: #BA2121">&quot;1&quot;</span>);
+<span style="color: #bbbbbb">    </span><span style="color: #008000; font-weight: bold">return</span><span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>;
+}
+</code></pre></div>
+
+<h2 id="submission">Submission<a class="headerlink" href="#submission" title="Permanent link">&para;</a></h2>
+<p>To submit you work, follow the same process outlined in <a href="reading01.html">Reading 01</a>:</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code>$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>switch<span style="color: #bbbbbb"> </span>master<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Make sure we are in master branch</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>pull<span style="color: #bbbbbb"> </span>--rebase<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Make sure we are up-to-date with GitLab</span>
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>checkout<span style="color: #bbbbbb"> </span>-b<span style="color: #bbbbbb"> </span>reading10<span style="color: #bbbbbb">           </span><span style="color: #3D7B7B; font-style: italic"># Create reading10 branch and check it out</span>
+
+$<span style="color: #bbbbbb"> </span><span style="color: #008000">cd</span><span style="color: #bbbbbb"> </span>reading10<span style="color: #bbbbbb">                        </span><span style="color: #3D7B7B; font-style: italic"># Go into reading10 folder</span>
+$<span style="color: #bbbbbb"> </span><span style="color: #19177C">$EDITOR</span><span style="color: #bbbbbb"> </span>answers.json<span style="color: #bbbbbb">                </span><span style="color: #3D7B7B; font-style: italic"># Edit your answers.json file</span>
+
+$<span style="color: #bbbbbb"> </span>../.scripts/check.py<span style="color: #bbbbbb">                </span><span style="color: #3D7B7B; font-style: italic"># Check reading10 quiz</span>
+Checking<span style="color: #bbbbbb"> </span>reading10<span style="color: #bbbbbb"> </span>quiz<span style="color: #bbbbbb"> </span>...
+<span style="color: #bbbbbb">     </span>Q01<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.30
+<span style="color: #bbbbbb">     </span>Q02<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.20
+<span style="color: #bbbbbb">     </span>Q03<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.70
+<span style="color: #bbbbbb">     </span>Q04<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.20
+<span style="color: #bbbbbb">     </span>Q05<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.15
+<span style="color: #bbbbbb">     </span>Q06<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.30
+<span style="color: #bbbbbb">     </span>Q07<span style="color: #bbbbbb"> </span><span style="color: #666666">0</span>.15
+<span style="color: #bbbbbb">   </span>Score<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00<span style="color: #bbbbbb"> </span>/<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00
+<span style="color: #bbbbbb">  </span>Status<span style="color: #bbbbbb"> </span>Success
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>add<span style="color: #bbbbbb"> </span>answers.json<span style="color: #bbbbbb">                </span><span style="color: #3D7B7B; font-style: italic"># Add answers.json to staging area</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>commit<span style="color: #bbbbbb"> </span>-m<span style="color: #bbbbbb"> </span><span style="color: #BA2121">&quot;Reading 10: Quiz&quot;</span><span style="color: #bbbbbb">    </span><span style="color: #3D7B7B; font-style: italic"># Commit work</span>
+
+$<span style="color: #bbbbbb"> </span><span style="color: #19177C">$EDITOR</span><span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Edit your program.c file</span>
+
+$<span style="color: #bbbbbb"> </span>make<span style="color: #bbbbbb"> </span>test-program<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Check reading10 program</span>
+Testing<span style="color: #bbbbbb"> </span>reading10<span style="color: #bbbbbb"> </span>program...
+<span style="color: #bbbbbb">   </span>Score<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00<span style="color: #bbbbbb"> </span>/<span style="color: #bbbbbb"> </span><span style="color: #666666">2</span>.00
+<span style="color: #bbbbbb">  </span>Status<span style="color: #bbbbbb"> </span>Success
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>add<span style="color: #bbbbbb"> </span>Makefile<span style="color: #bbbbbb">                    </span><span style="color: #3D7B7B; font-style: italic"># Add Makefile to staging area</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>add<span style="color: #bbbbbb"> </span>program.c<span style="color: #bbbbbb">                   </span><span style="color: #3D7B7B; font-style: italic"># Add program.c to staging area</span>
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>commit<span style="color: #bbbbbb"> </span>-m<span style="color: #bbbbbb"> </span><span style="color: #BA2121">&quot;Reading 10: Code&quot;</span><span style="color: #bbbbbb">    </span><span style="color: #3D7B7B; font-style: italic"># Commit work</span>
+
+$<span style="color: #bbbbbb"> </span>git<span style="color: #bbbbbb"> </span>push<span style="color: #bbbbbb"> </span>-u<span style="color: #bbbbbb"> </span>origin<span style="color: #bbbbbb"> </span>reading10<span style="color: #bbbbbb">        </span><span style="color: #3D7B7B; font-style: italic"># Push branch to GitHub</span>
+</code></pre></div>
+
+<div class="alert alert-success">
+<h4 id="pull-request"><i class="fa fa-github"></i> Pull Request<a class="headerlink" href="#pull-request" title="Permanent link">&para;</a></h4>
+<p>Once you have committed your work and pushed it to <a href="https://github.com">GitHub</a>, remember to
+create a <strong>pull request</strong> and assign it to the appropriate <strong>teaching
+assistant</strong> from the <a href="reading10_tas.html">Reading 10 TA List</a>.</p>
+</div>
+
+
+	    <div class="row">
+		<hr/>
+
+		<footer class="text-center">
+		    <p class="text-muted">
+		    <small>
+		    Built using
+		    <a href="https://getbootstrap.com/">Bootstrap</a>,
+		    <a href="https://fontawesome.com/">Font Awesome</a>, and
+		    <a href="http://www.python.org/">Python</a>.
+		    <br/>
+		    &copy; 2024 <a href="http://www.nd.edu">University of Notre Dame</a>
+		    </small>
+		    </p>
+		</footer>
+	    </div>
+
+	</div> <!-- /container -->
+
+	<!-- Bootstrap core JavaScript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	
+    </body>
+</html>
+

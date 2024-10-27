@@ -7,9 +7,9 @@
         assignments:
           - Reading 01
         items:
-          - name:       Slide 00
+          - name:       Slides 00
             link:       https://docs.google.com/presentation/d/1VFfnwjGYKRdBE19__adcZI9VbtgMZabvUMCY6y3NlDc/edit?usp=sharing
-          - name:       Slide 01
+          - name:       Slides 01
             link:       https://docs.google.com/presentation/d/1Sdf8hpSG585g60HKGMMuwptMO5Xw0VA52u5RvMEDXm4/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=32c2ec8e-2a8e-4d62-a296-b1d900facc78
@@ -17,7 +17,7 @@
       - date:           Thu 08/29
         topics:         OS Taxonomy, History, Themes
         items:
-          - name:       Slide 02
+          - name:       Slides 02
             link:       https://docs.google.com/presentation/d/12l44jW6GTLzTnX1ydFA2NJaE89B4ZjztFKylRG8x_BU/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=3e4bd4e2-3900-46ff-83e5-b1db00f9c763
@@ -29,7 +29,7 @@
         assignments:
           - Reading 02
         items:
-          - name:       Slide 03
+          - name:       Slides 03
             link:       https://docs.google.com/presentation/d/10e-SJ3HMl1Csjo3645NrUMDqTUqTRO1sESrMV1aS2N0/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=3bd59490-9add-4519-9a82-b1e000fb6f5f
@@ -37,7 +37,7 @@
       - date:           Thu 09/05
         topics:         Processes
         items:
-          - name:       Slide 04
+          - name:       Slides 04
             link:       https://docs.google.com/presentation/d/1nn3gRO5SdGB7NCHctDJyzoCCdjO3n9v6R2ryHTn1t-c/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b2676010-133f-4dde-b3b0-b1e200fbfda7
@@ -49,7 +49,7 @@
         assignments:
           - Reading 03
         items:
-          - name:       Slide 05
+          - name:       Slides 05
             link:       https://docs.google.com/presentation/d/1bw8LexsLl8qfdS6FGffWd7fgIRybgb0sFBk4VN6aw9c/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6b184894-51c5-4608-b3a7-b1e700f74850
@@ -57,7 +57,7 @@
       - date:           Thu 09/12
         topics:         MLFQ, Lottery
         items:
-          - name:       Slide 06
+          - name:       Slides 06
             link:       https://docs.google.com/presentation/d/1gQ_OMiAF3Gv2FUkES4G75z4uUZly9oybhMbmaSSJYKE/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=2fdc911d-ae83-4f07-920f-b1e900f9ce8b
@@ -71,7 +71,7 @@
       - date:           Tue 09/17
         topics:         Events
         items:
-          - name:       Slide 07
+          - name:       Slides 07
             link:       https://docs.google.com/presentation/d/15PBS54UWIxyRdyl_NHoYtX10cJuc7zFv4kp9kIxZ0-0/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c9fee9a7-584e-4ded-bddf-b1ee00faa979
@@ -90,7 +90,7 @@
         assignments:
           - Reading 04
         items:
-          - name:       Slide 08
+          - name:       Slides 08
             link:       https://docs.google.com/presentation/d/12Outl1slSmPfQWMOt9wU51KwNhWvIKZVTH67gJtWteE/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=648e0246-61f6-4c3f-b5b9-b1f500ff1616
@@ -98,7 +98,7 @@
       - date:           Thu 09/26
         topics:         Locks
         items:
-          - name:       Slide 09
+          - name:       Slides 09
             link:       https://docs.google.com/presentation/d/1C88HP-zQ2g2_4UGmM4oF_1EE1go8aSRNvNmbzV3rluY/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=953958ff-b6f1-4037-8dc1-b1f700faa898
@@ -110,7 +110,7 @@
         assignments:
           - Reading 05
         items:
-          - name:       Slide 10
+          - name:       Slides 10
             link:       https://docs.google.com/presentation/d/1zkm0sEVXqG5gsHhaP-sY2AW1x6K2FFZthfXWagSYNik/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=48b8fa74-c478-4c41-92c4-b1fc00f8c57b
@@ -128,7 +128,7 @@
         assignments:
           - Reading 06
         items:
-          - name:       Slide 11
+          - name:       Slides 11
             link:       https://docs.google.com/presentation/d/1RdfAkMmeyt7Qdt2LD2aAobl4zqi6iGmxMDdexQNGSiY/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=b601b320-c54a-45aa-87a4-b20300fb93fb
@@ -148,7 +148,7 @@
       - date:           Tue 10/15
         topics:         Concurrency Bugs
         items:
-          - name:       Slide 12
+          - name:       Slides 12
             link:       https://docs.google.com/presentation/d/1I7eq9t7MF4JQOMgC4LOXYySLKlVXOF5XR0P_sgMQu0Q/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=35715a0f-3c5b-4c42-a3d1-b20a00fc15d7
@@ -169,13 +169,13 @@
         assignments:
           - Reading 07
         items:
-          - name:       Slide 13
+          - name:       Slides 13
             link:       https://docs.google.com/presentation/d/1h1-VnqQV4ZHifkOfKZ00ojMpCMBUH3Hvxvk3T7HQb_I/edit?usp=sharing
 
       - date:           Thu 10/31
         topics:         Free-Space Management
         items:
-          - name:       Slide 14
+          - name:       Slides 14
             link:       https://docs.google.com/presentation/d/1dnkt6y3w1HsA0f747OEwe1sWlpA0zp2iFmuNHywZCto/edit?usp=sharing
 
 - name:     Heap Management, Segmentation
@@ -188,7 +188,7 @@
       - date:           Thu 11/07
         topics:         Segmentation
         items:
-          - name:       Slide 15
+          - name:       Slides 15
             link:       https://docs.google.com/presentation/d/1Wb096t9WGdisI8BkNiFtpm_Lc0j0QA3QRqdFPPynL00/edit?usp=sharing
 
 - name:     Paging
@@ -198,13 +198,13 @@
         assignments:
           - Reading 09
         items:
-          - name:       Slide 16
+          - name:       Slides 16
             link:       https://docs.google.com/presentation/d/15qg8xf_z1aRGsPlk_agFOM-S0Ae-QrXYctvzZFn8otI/edit?usp=sharing
 
       - date:           Thu 11/14
         topics:         TLB / Multi-Level
         items:
-          - name:       Slide 17
+          - name:       Slides 17
             link:       https://docs.google.com/presentation/d/1uWt4MKxdnk-5-8KFRYZmvZ9IFIQVUwH_BKMH7FzOrSA/edit?usp=sharing
 
 - name:     Exam 03
@@ -216,7 +216,7 @@
       - date:           Tue 11/19
         topics:         Swapping
         items:
-          - name:       Slide 18
+          - name:       Slides 18
             link:       https://docs.google.com/presentation/d/1sXhaQxcTVo6U_M77_oJA05TsHZS8qsHJOY_Y_6Tw9FQ/edit?usp=sharing
 
       - date:           Thu 11/21
@@ -233,7 +233,7 @@
         assignments:
           - Reading 10
         items:
-          - name:       Slide 19
+          - name:       Slides 19
             link:       https://docs.google.com/presentation/d/1mu3xWwi4rlgGkDX1hXEvdRv-6941hVgllKCjNCJUqKA/edit?usp=sharing
 
       - date:           Thu 11/28
@@ -246,13 +246,13 @@
         assignments:
           - Reading 11
         items:
-          - name:       Slide 20
+          - name:       Slides 20
             link:       https://docs.google.com/presentation/d/1THZeXXOSl1FXr7o5BO-eYiIF2wQX8UuVU4NLcV2MaUU/edit?usp=sharing
 
       - date:           Thu 12/05
         topics:         File Systems
         items:
-          - name:       Slide 21
+          - name:       Slides 21
             link:       https://docs.google.com/presentation/d/1xAd6VwGHWCo4LdLDRJrMCaU4Lx7TtPszwfoNTVud7pU/edit?usp=sharing
 
 - name:     Consistency, Integrity
@@ -262,7 +262,7 @@
         assignments:
           - Reading 12
         items:
-          - name:       Slide 22
+          - name:       Slides 22
             link:       https://docs.google.com/presentation/d/1YAeDJ925xIiHLyKXMkV_ls0Ie0eh86Dff5BF6uFcjC0/edit?usp=sharing
 
       - date:           Thu 12/12
@@ -270,7 +270,7 @@
         assignments:
           - Project 04
         items:
-          - name:       Slide 23
+          - name:       Slides 23
             link:       https://docs.google.com/presentation/d/1dU6vf0w26LCaWj66h1akVYW2wrDIaiHEsZyYk8K4uTg/edit?usp=sharing
 
 - name:     Exam 04

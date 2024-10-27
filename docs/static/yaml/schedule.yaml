@@ -187,6 +187,9 @@
 
       - date:           Thu 11/07
         topics:         Segmentation
+        items:
+          - name:       Slide 15
+            link:       https://docs.google.com/presentation/d/1Wb096t9WGdisI8BkNiFtpm_Lc0j0QA3QRqdFPPynL00/edit?usp=sharing
 
 - name:     Paging
   days:
@@ -194,9 +197,15 @@
         topics:         Paging
         assignments:
           - Reading 09
+        items:
+          - name:       Slide 16
+            link:       https://docs.google.com/presentation/d/15qg8xf_z1aRGsPlk_agFOM-S0Ae-QrXYctvzZFn8otI/edit?usp=sharing
 
       - date:           Thu 11/14
         topics:         TLB / Multi-Level
+        items:
+          - name:       Slide 17
+            link:       https://docs.google.com/presentation/d/1uWt4MKxdnk-5-8KFRYZmvZ9IFIQVUwH_BKMH7FzOrSA/edit?usp=sharing
 
 - name:     Exam 03
   days:
@@ -206,6 +215,9 @@
 
       - date:           Tue 11/19
         topics:         Swapping
+        items:
+          - name:       Slide 18
+            link:       https://docs.google.com/presentation/d/1sXhaQxcTVo6U_M77_oJA05TsHZS8qsHJOY_Y_6Tw9FQ/edit?usp=sharing
 
       - date:           Thu 11/21
         topics:         ''

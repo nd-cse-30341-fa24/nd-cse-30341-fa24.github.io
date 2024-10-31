@@ -179,6 +179,8 @@
         items:
           - name:       Slides 14
             link:       https://docs.google.com/presentation/d/1dnkt6y3w1HsA0f747OEwe1sWlpA0zp2iFmuNHywZCto/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=dbfef1aa-49fe-476b-b00a-b21a00f7fd27
 
 - name:     Heap Management, Segmentation
   days:

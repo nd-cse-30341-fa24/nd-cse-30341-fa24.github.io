@@ -48,6 +48,22 @@ body:       |
 
     - [Understanding RAID: How performance scales from one disk to eight](https://arstechnica.com/information-technology/2020/04/understanding-raid-how-performance-scales-from-one-disk-to-eight/)
 
+    ### Optional Conversation
+
+    Using [Learn About from Google], have a conversation about [I/O devices]
+    and [RAID] by asking the following questions:
+
+    > 1. What is the memory hierarchy?
+    > 2. How do operating systems provide persistence?
+    > 3. What is the difference between a SSD and a HDD?
+    > 4. What is RAID and why is it useful?
+    > 5. What is the difference between RAID 0, RAID 1, RAID 5, and RAID 10?
+
+    As you explore, feel free to dive into the suggested related
+    questions or to "simplify", "go deeper", and "get images".
+
+    [Learn About from Google]: https://learning.google.com/experiments/learn-about
+
     ## Quiz
 
     Once you have done the readings, answer the following [Reading 10 Quiz]

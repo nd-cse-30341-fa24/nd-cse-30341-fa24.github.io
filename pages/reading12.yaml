@@ -49,6 +49,26 @@ body:       |
 
     3. [MapReduce](https://research.google/pubs/pub62/)
 
+    ### Optional AI Conversation
+
+    Using [Learn About from Google], have a conversation about [file systems]
+    consistency and integrity by asking the following questions:
+
+    > 1. How does a traditional unix file system maintain consistency?
+
+    > 2. What does the fsck utility do?
+
+    > 3. How does journaling help with file system consistency?
+
+    > 4. How does a file system maintain data integrity?
+
+    > 5. Is crash consistency the same thing as data integrity?
+
+    As you explore, feel free to dive into the suggested related
+    questions or to "simplify", "go deeper", and "get images".
+
+    [Learn About from Google]: https://learning.google.com/experiments/learn-about
+
     ## Quiz
 
     Once you have done the readings, answer the following [Reading 12 Quiz]

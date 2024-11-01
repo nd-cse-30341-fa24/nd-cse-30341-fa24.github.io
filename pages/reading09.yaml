@@ -39,6 +39,22 @@ body:       |
         - <p>[Case Study: VAX/VMS](http://pages.cs.wisc.edu/~remzi/OSTEP/vm-complete.pdf)</p>
         - <p>[Summary](http://pages.cs.wisc.edu/~remzi/OSTEP/vm-dialogue.pdf)</p>
 
+    ### Optional
+    
+    Using [Learn About from Google], have a conversation about [paging] and
+    [swapping] by asking the following questions:
+
+    > 1. When using paging, why do we need TLBs?
+    > 2. When using paging, why do we use multiple levels?
+    > 3. When does swapping occur?
+    > 4. How does swapping and paging work together?
+    > 5. What are some common page replacement algorithms?
+
+    As you explore, feel free to dive into the suggested related
+    questions or to "simplify", "go deeper", and "get images".
+
+    [Learn About from Google]: https://learning.google.com/experiments/learn-about 
+
     ## Quiz
 
     Once you have done the readings, answer the following [Reading 09 Quiz]

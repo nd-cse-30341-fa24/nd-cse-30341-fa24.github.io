@@ -38,6 +38,22 @@ body:       |
         - <p>[Locality and The Fast File System](http://pages.cs.wisc.edu/~remzi/OSTEP/file-ffs.pdf)</p>
         - <p>[Log-structured File Systems](http://pages.cs.wisc.edu/~remzi/OSTEP/file-lfs.pdf)</p>
 
+    ### Optional AI Conversation
+
+    Using [Learn About from Google], have a conversation about [file systems]
+    [FFS], and [LFS] by asking the following questions:
+
+    > 1. Why does the unix file system have a superblock?
+    > 2. How does a file system store metadata?
+    > 3. What is an indirect block in the context of a file system?
+    > 4. How does FFS compare to the traditional unix file system?
+    > 5. How does LFS compare to the traditional unix file system?
+
+    As you explore, feel free to dive into the suggested related
+    questions or to "simplify", "go deeper", and "get images".
+
+    [Learn About from Google]: https://learning.google.com/experiments/learn-about
+
     ## Quiz
 
     Once you have done the readings, answer the following [Reading 11 Quiz]

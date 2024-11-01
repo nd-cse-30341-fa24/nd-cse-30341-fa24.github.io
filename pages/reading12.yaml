@@ -10,7 +10,7 @@ body:       |
 
     **Everyone**:
 
-    Next week, we will discuss how to enforce **consistency** in [filesystems]
+    Next week, we will discuss how to enforce **consistency** in [file systems]
     and how to maintain data **integrity**.
 
     <div class="alert alert-info" markdown="1">
@@ -18,12 +18,12 @@ body:       |
     #### <i class="fa fa-search"></i> TL;DR
 
     For this reading assignment, you are to read about maintaining consistency
-    and integrity in [filesystems], and submit your responses to the [Reading
+    and integrity in [file systems], and submit your responses to the [Reading
     12 Quiz].
 
     </div>
 
-    [filesystems]:  https://en.wikipedia.org/wiki/File_system
+    [file systems]:  https://en.wikipedia.org/wiki/File_system
 
     <img src="static/img/ostep.jpg" class="pull-right">
 

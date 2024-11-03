@@ -813,11 +813,11 @@ body:       |
               <br>
               <li><b><i>2.00</i></b>
                 <ul class="list-unstyled">
-                  <li><i>1.00</i></li>
-                  <li><i>1.00</i></li>
-                  <li><i>1.00</i></li>
-                  <li><i>1.00</i></li>
+                  <li><i>0.25</i></li>
                   <li><i>0.50</i></li>
+                  <li><i>0.50</i></li>
+                  <li><i>0.50</i></li>
+                  <li><i>0.25</i></li>
                 </ul>
               </li>
             </ol>

@@ -193,14 +193,15 @@ body:       |
 
         $ ../.scripts/check.py                # Check reading11 quiz
         Checking reading11 quiz ...
-             Q01 0.80
-             Q02 0.50
+        Checking reading11 quiz ...
+             Q01 0.50
+             Q02 0.25
              Q03 0.30
-             Q04 0.30
-             Q05 0.40
-             Q06 0.20
+             Q04 0.15
+             Q05 0.20
+             Q06 0.10
              Q07 0.50
-           Score 3.00 / 3.00
+           Score 2.00 / 2.00
           Status Success
 
         $ git add answers.json                # Add answers.json to staging area

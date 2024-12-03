@@ -266,6 +266,8 @@
         items:
           - name:       Slides 20
             link:       https://docs.google.com/presentation/d/1THZeXXOSl1FXr7o5BO-eYiIF2wQX8UuVU4NLcV2MaUU/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=48edc6cf-5a48-4d3e-9d3f-b23b010cd5d9
 
       - date:           Thu 12/05
         topics:         File Systems
